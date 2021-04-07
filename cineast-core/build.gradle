@@ -167,6 +167,10 @@ shadowJar{
     mergeServiceFiles()
 }
 
+shadowJar{
+    mergeServiceFiles()
+}
+
 test {
     useJUnitPlatform()
     testLogging {
