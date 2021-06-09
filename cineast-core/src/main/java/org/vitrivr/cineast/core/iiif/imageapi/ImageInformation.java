@@ -11,6 +11,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 public interface ImageInformation {
 
+  /** String present at 0th index of {@link ImageInformation#profile} indicating that the server supports Image API version 2.1.1 **/
+  private final String IMAGE_API_VERSION_2_1_1 = "http://iiif.io/api/image/2/context.json";
+
   /**
    * @param feature String denoting a feature whose support needs to be checked
    * @return false if server has advertised it's supported features and the doesn't include this specific feature
@@ -59,6 +62,23 @@ public interface ImageInformation {
    */
   Long getMaxArea();
 
+
+  public IMAGE_API_VERSION getImageApiVersion() {
+    String apiLevelString = this.getProfile().first;
+    switch (apiLevelString) {
+      case IMAGE_API_VERSION_2_1_1:
+        return IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE;
+      default:
+        return IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE;
+    }
+  }
+
+  /**
+   * Enum to hold the various Image Api specification versions supported by the builder
+   */
+  public enum IMAGE_API_VERSION {
+    TWO_POINT_ONE_POINT_ONE
+  }
 
   /**
    * Inner class used to parse the Image Information JSON response.
