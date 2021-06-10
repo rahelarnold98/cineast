@@ -1,38 +1,40 @@
-package org.vitrivr.cineast.core.iiif.imageapi;
+package org.vitrivr.cineast.core.iiif.imageapi.v2_1_1;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.vitrivr.cineast.core.iiif.imageapi.ImageInformation.IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE;
-import static org.vitrivr.cineast.core.iiif.imageapi.ImageRequestBuilder.EXTENSION_TIF;
-import static org.vitrivr.cineast.core.iiif.imageapi.ImageRequestBuilder.QUALITY_BITONAL;
-import static org.vitrivr.cineast.core.iiif.imageapi.ImageRequestBuilder.REGION_FULL;
-import static org.vitrivr.cineast.core.iiif.imageapi.ImageRequestBuilder.REGION_PERCENTAGE;
-import static org.vitrivr.cineast.core.iiif.imageapi.ImageRequestBuilder.REGION_SQUARE;
-import static org.vitrivr.cineast.core.iiif.imageapi.ImageRequestBuilder.SIZE_FULL;
-import static org.vitrivr.cineast.core.iiif.imageapi.ImageRequestBuilder.SIZE_MAX;
-import static org.vitrivr.cineast.core.iiif.imageapi.ImageRequestBuilder.SIZE_PERCENTAGE;
-import static org.vitrivr.cineast.core.iiif.imageapi.ImageRequestBuilder.toSimplifiedFloatString;
+import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder.EXTENSION_TIF;
+import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder.QUALITY_BITONAL;
+import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder.REGION_FULL;
+import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder.REGION_PERCENTAGE;
+import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder.REGION_SQUARE;
+import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder.SIZE_MAX;
+import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilder.SIZE_PERCENTAGE;
+import static org.vitrivr.cineast.core.iiif.imageapi.BaseImageRequestBuilderImpl.toSimplifiedFloatString;
+import static org.vitrivr.cineast.core.iiif.imageapi.v2_1_1.ImageRequestBuilder_v2_1_1.SIZE_FULL;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.vitrivr.cineast.core.iiif.imageapi.ImageRequest;
 
 /**
+ * Only input validation and functions specific to Image API 2.1.1 need to be tested
+ *
  * @author singaltanmay
  * @version 1.0
- * @created 29.05.21
+ * @created 10.06.21
  */
-class ImageRequestBuilderTest {
+public class ImageRequestBuilder_v2_1_1_Test {
 
   private static final String BASE_URL = "https://libimages.princeton.edu/loris/pudl0001/5138415/00000011.jp2";
 
-  ImageRequestBuilder builder;
+  public ImageRequestBuilder_v2_1_1 builder;
 
   @BeforeEach
-  void setup() {
-    builder = new ImageRequestBuilder(TWO_POINT_ONE_POINT_ONE, BASE_URL);
+  public void setup() {
+    builder = new ImageRequestBuilder_v2_1_1_Impl(BASE_URL);
   }
 
   /**
@@ -93,6 +95,14 @@ class ImageRequestBuilderTest {
   @Nested
   class setSizeTests {
 
+    @DisplayName("setSizeMax test")
+    @Test
+    void setSizeMax() {
+      ImageRequest request = builder.setSizeMax().build();
+      assertNotNull(request);
+      assertEquals(SIZE_MAX, request.getSize());
+    }
+
     @DisplayName("setSizeFull test")
     @Test
     void setSizeFull() {
@@ -101,13 +111,6 @@ class ImageRequestBuilderTest {
       assertEquals(SIZE_FULL, request.getSize());
     }
 
-    @DisplayName("setSizeMax test")
-    @Test
-    void setSizeMax() {
-      ImageRequest request = builder.setSizeMax().build();
-      assertNotNull(request);
-      assertEquals(SIZE_MAX, request.getSize());
-    }
 
     @DisplayName("setSizePercentage test")
     @Test
