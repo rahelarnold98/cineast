@@ -59,6 +59,15 @@ public interface ImageInformation {
    */
   Long getMaxHeight();
 
+  public static IMAGE_API_VERSION getImageApiVersionNumeric(String input) {
+    if (input.equals("2.1.1")) {
+      return IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE;
+    } else if (input.equals("3.0") || input.equals("3.0.0")) {
+      return IMAGE_API_VERSION.THREE_POINT_ZERO;
+    }
+    return IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE;
+  }
+
   /**
    * Get the max area supported by server
    */
@@ -77,13 +86,19 @@ public interface ImageInformation {
     }
   }
 
-  public static IMAGE_API_VERSION getImageApiVersionNumeric(String input){
-    if (input.equals("2.1.1")){
-      return IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE;
-    } else if (input.equals("3.0") || input.equals("3.0.0")){
-      return IMAGE_API_VERSION.THREE_POINT_ZERO;
-    }
-    return IMAGE_API_VERSION.TWO_POINT_ONE_POINT_ONE;
+  /**
+   * @param feature String denoting a feature whose support needs to be checked
+   * @return true if server supports the feature
+   */
+  public boolean isFeatureSupported(String feature) {
+    List<ProfileItem> profiles = this.getProfile().second;
+    return profiles.stream().anyMatch(item -> {
+      List<String> supports = item.getSupports();
+      if (supports == null) {
+        throw new UnsupportedOperationException("The server has not advertised the features supported by it");
+      }
+      return supports.stream().anyMatch(q -> q.equals(feature));
+    });
   }
 
   /**
