@@ -95,7 +95,7 @@ public interface ImageInformation {
     return profiles.stream().anyMatch(item -> {
       List<String> supports = item.getSupports();
       if (supports == null) {
-        throw new UnsupportedOperationException("The server has not advertised the features supported by it");
+        throw new NullPointerException("The server has not advertised the features supported by it");
       }
       return supports.stream().anyMatch(q -> q.equals(feature));
     });
