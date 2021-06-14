@@ -285,6 +285,11 @@ public class ImageRequestBuilder_v3 {
     return new ImageApiVersion(IMAGE_API_VERSION.THREE_POINT_ZERO);
   }
 
+  /** Get the {@link ImageApiVersion} of the ImageInformation */
+  public ImageApiVersion getImageApiVersion() {
+    return new ImageApiVersion(IMAGE_API_VERSION.THREE_POINT_ZERO);
+  }
+
   private static class Validators extends BaseImageRequestValidators {
 
     private static final String ERROR_UPSCALING_NOT_SUPPORTED = "Server does not support requesting for image sizes larger than the image's max size";
