@@ -116,7 +116,7 @@ dependencies {
     implementation 'org.mockito:mockito-inline:3.11.0'
 
     /** Mockito for unit testing */
-    implementation 'org.mockito:mockito-core:3.11.0'
+    implementation 'org.mockito:mockito-inline:3.11.0'
 
     /** Tensorflow (Java). */
     api group: "org.tensorflow", name: "tensorflow-core-platform", version: version_tensorflow
