@@ -54,6 +54,7 @@ public class ImageInformation_v2 implements ImageInformation {
    */
   @JsonProperty(required = true)
   private long height;
+
   /**
    * A set of descriptions of the parameters to use to request regions of the image (tiles) that are efficient for the server to deliver. Each description gives a width, optionally a height for non-square tiles, and a set of scale factors at which tiles of those dimensions are available.
    */
@@ -106,6 +107,29 @@ public class ImageInformation_v2 implements ImageInformation {
   @JsonProperty
   public void setMaxHeight(final Long maxHeight) {
     this.maxHeight = maxHeight;
+  }
+
+  /** The maximum width in pixels supported for this image. Clients must not expect requests with a width greater than this value to be supported. maxWidth must be specified if maxHeight is specified. */
+  @Getter
+  @Setter
+  @JsonProperty
+  private Long maxWidth;
+  /** The maximum height in pixels supported for this image. Clients must not expect requests with a height greater than this value to be supported. */
+  @Setter
+  @JsonProperty
+  private Long maxHeight;
+  /** The maximum area in pixels supported for this image. Clients must not expect requests with a width*height greater than this value to be supported. */
+  @Getter
+  @Setter
+  @JsonProperty
+  private Long maxArea;
+
+  public Long getMaxHeight() {
+    // If maxWidth is specified and maxHeight is not, then clients should infer that maxHeight = maxWidth
+    if (maxHeight == 0 && maxWidth != 0) {
+      maxHeight = maxWidth;
+    }
+    return maxHeight;
   }
 
   /**

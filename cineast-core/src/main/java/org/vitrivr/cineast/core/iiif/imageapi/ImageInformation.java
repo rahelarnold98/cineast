@@ -49,6 +49,15 @@ public interface ImageInformation {
    */
   ImageApiVersion getImageApiVersion();
 
+  /** Get the max width supported by server */
+  Long getMaxWidth();
+
+  /** Get the max height supported by server */
+  Long getMaxHeight();
+
+  /** Get the max area supported by server */
+  Long getMaxArea();
+
   /**
    * Get the max width supported by server
    */
