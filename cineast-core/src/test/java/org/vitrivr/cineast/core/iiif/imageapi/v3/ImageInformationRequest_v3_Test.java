@@ -22,7 +22,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageInformation.SizesItem;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageInformation.TilesItem;
-import org.vitrivr.cineast.core.iiif.imageapi.ImageInformationRequest;
 
 /**
  * Tests the parsing of JSON response received for an "info.json" into an ImageInformation_v3 object
