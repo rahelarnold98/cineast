@@ -132,16 +132,18 @@ public class LSC21TemporalUpdateCommand implements Runnable {
               new Pair<>(MediaSegmentDescriptor.SEGMENT_ENDABS_COL_NAME, (double) msAbsNext)
           )
           .where(new org.vitrivr.cottontail.client.language.extensions.Literal(CineastConstants.SEGMENT_ID_COLUMN_QUALIFIER, "=", segment.getSegmentId()));
-      cottontail.client.insert(update, txId);
+      cottontail.client.insert(update, uTxId);
       totalCounter++;
       if (counter++ > 99) {
+        cottontail.client.commit(uTxId);
+        uTxId = cottontail.client.begin();
         if (progress) {
           System.out.println("Updated " + totalCounter + " rows.");
         }
         counter = 0;
       }
     }
-    cottontail.client.commit(txId);
+    cottontail.client.commit(uTxId);
     System.out.println("Done.");
   }
 }
