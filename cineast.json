@@ -127,11 +127,11 @@
     "legacyPort": 12345,
     "threadPoolSize": 12,
     "serveContent": true,
-    "serveUI": false,
+    "serveUI": true,
     "uiLocation": "../vitrivr-ng/dist",
-    "thumbnailLocation": "/Volumes/V3C1/V3C1/thumbnails",
-    "objectLocation": "/Volumes/V3C1/V3C1/videos",
-    "objectsFilesAreIDed": true
+    "thumbnailLocation": "./thumbnails",
+    "objectLocation": "./v3c1-mini",
+    "objectsFilesAreIDed": false
   },
 
   "monitoring":{
