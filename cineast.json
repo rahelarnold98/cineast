@@ -137,6 +137,10 @@
   "monitoring":{
     "enablePrometheus": false,
     "prometheusPort": 4569
+  },
+
+  "jsonQuery": {
+    "createFile": false
   }
 
 }

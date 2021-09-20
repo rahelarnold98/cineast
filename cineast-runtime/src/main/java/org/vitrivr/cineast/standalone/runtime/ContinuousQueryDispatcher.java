@@ -35,6 +35,7 @@ import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.core.util.MathHelper;
 import org.vitrivr.cineast.core.util.ScoreFusion;
 import org.vitrivr.cineast.standalone.config.Config;
+import org.vitrivr.cineast.standalone.config.JsonQuery;
 import org.vitrivr.cineast.standalone.listener.RetrievalResultListener;
 
 public class ContinuousQueryDispatcher {
@@ -122,11 +123,13 @@ public class ContinuousQueryDispatcher {
     List<SegmentScoreElement> segmentScores = this.extractResults(futures, this.mediaSegmentReader);
     LOGGER.trace("Retrieved {} results, finishing", segmentScores.size());
 
-    ObjectMapper mapper = new ObjectMapper();
-    try {
-      mapper.writeValue(new File("query_one_category.json"), segments);
-    } catch (IOException e) {
-      e.printStackTrace();
+    if (JsonQuery.createFile) {
+      ObjectMapper mapper = new ObjectMapper();
+      try {
+        mapper.writeValue(new File("query_one_category.json"), segments);
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
     }
 
     this.finish();
@@ -246,20 +249,24 @@ public class ContinuousQueryDispatcher {
     }
 
     double weightedScore = score * weight;
-    boolean inserted;
-    inserted = false;
-    for (SegmentInfo segment : segments) {
-      if (segment.getSegment().equals(id)) {
-        segment.features.put(feature, weightedScore);
-        inserted = true;
+
+    if (JsonQuery.createFile){
+      boolean inserted;
+      inserted = false;
+      for (SegmentInfo segment : segments) {
+        if (segment.getSegment().equals(id)) {
+          segment.features.put(feature, weightedScore);
+          inserted = true;
+        }
+      }
+      if (!inserted) {
+        HashMap<String, Double> f = new HashMap<String, Double>();
+        f.put(feature, weightedScore);
+        SegmentInfo s = new SegmentInfo(id, f);
+        segments.add(s);
       }
     }
-    if (!inserted) {
-      HashMap<String, Double> f = new HashMap<String, Double>();
-      f.put(feature, weightedScore);
-      SegmentInfo s = new SegmentInfo(id, f);
-      segments.add(s);
-    }
+
 
     scoreById.adjustOrPutValue(id, weightedScore, weightedScore);
   }

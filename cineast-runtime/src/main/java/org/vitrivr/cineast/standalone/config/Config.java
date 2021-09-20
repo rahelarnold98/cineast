@@ -2,15 +2,17 @@ package org.vitrivr.cineast.standalone.config;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.io.File;
+import java.util.HashMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.config.*;
+import org.vitrivr.cineast.core.config.BenchmarkConfig;
+import org.vitrivr.cineast.core.config.CacheConfig;
+import org.vitrivr.cineast.core.config.DatabaseConfig;
+import org.vitrivr.cineast.core.config.DecoderConfig;
 import org.vitrivr.cineast.core.data.MediaType;
 import org.vitrivr.cineast.core.data.raw.CachedDataFactory;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
-
-import java.io.File;
-import java.util.HashMap;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Config {
@@ -27,6 +29,7 @@ public class Config {
     private HashMap<MediaType, DecoderConfig> decoders;
     private BenchmarkConfig benchmark = new BenchmarkConfig();
     private MonitoringConfig monitoring = new MonitoringConfig();
+    private JsonQuery jsonQuery = new JsonQuery();
 
     /**
      * Accessor for shared (i.e. application wide) configuration.
@@ -132,4 +135,12 @@ public class Config {
     public void setMonitoring(MonitoringConfig monitoring) {
       this.monitoring = monitoring;
     }
+
+    @JsonProperty
+    public JsonQuery getJsonQuery() {
+    return jsonQuery;
+  }
+    public void setJsonQuery(JsonQuery jsonQuery) {
+    this.jsonQuery = jsonQuery;
+  }
 }

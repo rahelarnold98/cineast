@@ -32,6 +32,7 @@ import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.temporal.TemporalScoring;
 import org.vitrivr.cineast.standalone.config.Config;
+import org.vitrivr.cineast.standalone.config.JsonQuery;
 import org.vitrivr.cineast.standalone.runtime.SegmentInfo;
 import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
 
@@ -97,16 +98,17 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
 
         QueryStage stage = stagedSimilarityQuery.getStages().get(stageIndex);
 
-        queryInfo.setQueryId(qconf.getQueryId().toString());
+        if (JsonQuery.createFile) {
+          queryInfo.setQueryId(qconf.getQueryId().toString());
 
-        // Time and date of query
-        LocalDateTime myDateObj = LocalDateTime.now();
-        DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-        String formattedDate = myDateObj.format(myFormatObj);
-        queryInfo.setFormattedDate(formattedDate);
-
-        // create ArrayList for Segments
-        ArrayList<Segment> segment = new ArrayList<>();
+          // Time and date of query
+          LocalDateTime myDateObj = LocalDateTime.now();
+          DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+          String formattedDate = myDateObj.format(myFormatObj);
+          queryInfo.setFormattedDate(formattedDate);
+        }
+          // create ArrayList for Segments
+          ArrayList<Segment> segment = new ArrayList<>();
 
         /*
          * Iterate over all QueryTerms for this stage and add their results to the list of relevant segments for the next query stage.
@@ -149,30 +151,32 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
             cache.get(stageIndex).put(category, results);
             results.forEach(res -> relevantSegments.add(res.key));
 
-            ObjectMapper mapper = new ObjectMapper();
-            ArrayList<SegmentInfo> s = new ArrayList<>();
-            try {
-              s = mapper.readValue(new File("query_one_category.json"),
-                  new TypeReference<ArrayList<SegmentInfo>>() {
-                  });
-            } catch (IOException e) {
-              e.printStackTrace();
-            }
-
-            boolean test = false;
-            for (SegmentInfo segmentInfo : s) {
-              for (Segment seg : segment) {
-                if (segmentInfo.getSegment().equals(seg.segment_id)) {
-                  checkCategory(category, segmentInfo, seg);
-                  test = true;
-                }
+            if (JsonQuery.createFile) {
+              ObjectMapper mapper = new ObjectMapper();
+              ArrayList<SegmentInfo> s = new ArrayList<>();
+              try {
+                s = mapper.readValue(new File("query_one_category.json"),
+                    new TypeReference<ArrayList<SegmentInfo>>() {
+                    });
+              } catch (IOException e) {
+                e.printStackTrace();
               }
-              if (!test) {
-                Segment newSeg = new Segment();
-                newSeg.setSegment_id(segmentInfo.getSegment());
-                checkCategory(category, segmentInfo, newSeg);
-                segment.add(newSeg);
-                queryInfo.setSegments(segment);
+
+              boolean test = false;
+              for (SegmentInfo segmentInfo : s) {
+                for (Segment seg : segment) {
+                  if (segmentInfo.getSegment().equals(seg.segment_id)) {
+                    checkCategory(category, segmentInfo, seg);
+                    test = true;
+                  }
+                }
+                if (!test) {
+                  Segment newSeg = new Segment();
+                  newSeg.setSegment_id(segmentInfo.getSegment());
+                  checkCategory(category, segmentInfo, newSeg);
+                  segment.add(newSeg);
+                  queryInfo.setSegments(segment);
+                }
               }
             }
 
@@ -198,13 +202,15 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
                   .collect(Collectors.toList());
               results.forEach(res -> limitedRelevantSegments.add(res.key));
 
-              for (StringDoublePair a : limitedResults) {
-                for (Segment seg : queryInfo.segments) {
-                  if (Objects.equals(seg.segment_id, a.key)) {
-                    if (seg.value == null) {
-                      seg.value = a.value;
-                    } else {
-                      seg.value += a.value;
+              if (JsonQuery.createFile) {
+                for (StringDoublePair a : limitedResults) {
+                  for (Segment seg : queryInfo.segments) {
+                    if (Objects.equals(seg.segment_id, a.key)) {
+                      if (seg.value == null) {
+                        seg.value = a.value;
+                      } else {
+                        seg.value += a.value;
+                      }
                     }
                   }
                 }
@@ -301,16 +307,19 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
       futures.addAll(this.finalizeAndSubmitTemporalResults(session, uuid, finalResults));
       futures.forEach(CompletableFuture::join);
     }
-    try {
-      queryInfo.segments.sort(Segment.COMPARATOR.reversed());
-    } catch (Exception ignored) {
-    }
 
-    ObjectMapper mapper = new ObjectMapper();
-    try {
-      mapper.writeValue(new File("query-" + qconf.getQueryId() + ".json"), queryInfo);
-    } catch (IOException e) {
-      e.printStackTrace();
+    if (JsonQuery.createFile) {
+      try {
+        queryInfo.segments.sort(Segment.COMPARATOR.reversed());
+      } catch (Exception ignored) {
+      }
+
+      ObjectMapper mapper = new ObjectMapper();
+      try {
+        mapper.writeValue(new File("query-" + qconf.getQueryId() + ".json"), queryInfo);
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
     }
 
     for (Thread cleanupThread : cleanupThreads) {
