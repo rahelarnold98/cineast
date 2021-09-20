@@ -159,17 +159,21 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
               e.printStackTrace();
             }
 
+            boolean test = false;
             for (SegmentInfo segmentInfo : s) {
               for (Segment seg : segment) {
                 if (segmentInfo.getSegment().equals(seg.segment_id)) {
                   checkCategory(category, segmentInfo, seg);
+                  test = true;
                 }
               }
-              Segment newSeg = new Segment();
-              newSeg.setSegment_id(segmentInfo.getSegment());
-              checkCategory(category, segmentInfo, newSeg);
-              segment.add(newSeg);
-              queryInfo.setSegments(segment);
+              if (!test) {
+                Segment newSeg = new Segment();
+                newSeg.setSegment_id(segmentInfo.getSegment());
+                checkCategory(category, segmentInfo, newSeg);
+                segment.add(newSeg);
+                queryInfo.setSegments(segment);
+              }
             }
 
             /*
@@ -193,6 +197,19 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
                   .limit(max)
                   .collect(Collectors.toList());
               results.forEach(res -> limitedRelevantSegments.add(res.key));
+
+              for (StringDoublePair a : limitedResults) {
+                for (Segment seg : queryInfo.segments) {
+                  if (Objects.equals(seg.segment_id, a.key)) {
+                    if (seg.value == null) {
+                      seg.value = a.value;
+                    } else {
+                      seg.value += a.value;
+                    }
+                  }
+                }
+              }
+
               List<String> limitedSegmentIds = limitedResults.stream()
                   .map(el -> el.key)
                   .collect(Collectors.toList());
@@ -284,13 +301,9 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
       futures.addAll(this.finalizeAndSubmitTemporalResults(session, uuid, finalResults));
       futures.forEach(CompletableFuture::join);
     }
-
-    for (StringDoublePair a : containerResults.get(0)) {
-      for (Segment s : queryInfo.segments) {
-        if (Objects.equals(s.segment_id, a.key)) {
-          s.value = a.value;
-        }
-      }
+    try {
+      queryInfo.segments.sort(Segment.COMPARATOR.reversed());
+    } catch (Exception ignored) {
     }
 
     ObjectMapper mapper = new ObjectMapper();

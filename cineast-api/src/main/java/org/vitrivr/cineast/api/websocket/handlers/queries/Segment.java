@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.api.websocket.handlers.queries;
 
+import java.util.Comparator;
 import java.util.HashMap;
 
 public class Segment {
@@ -41,6 +42,15 @@ public class Segment {
   public void setGlobal(HashMap<String, Double> global) {
     this.global = global;
   }
+
+  public static final Comparator<Segment> COMPARATOR = new Comparator<Segment>() {
+
+    @Override
+    public int compare(Segment s1, Segment s2) {
+      return Double.compare(s1.value, s2.value);
+    }
+
+  };
 
 
 }

@@ -246,16 +246,20 @@ public class ContinuousQueryDispatcher {
     }
 
     double weightedScore = score * weight;
-
+    boolean inserted;
+    inserted = false;
     for (SegmentInfo segment : segments) {
       if (segment.getSegment().equals(id)) {
         segment.features.put(feature, weightedScore);
+        inserted = true;
       }
     }
-    HashMap<String, Double> f = new HashMap<String, Double>();
-    f.put(feature, weightedScore);
-    SegmentInfo s = new SegmentInfo(id, f);
-    segments.add(s);
+    if (!inserted) {
+      HashMap<String, Double> f = new HashMap<String, Double>();
+      f.put(feature, weightedScore);
+      SegmentInfo s = new SegmentInfo(id, f);
+      segments.add(s);
+    }
 
     scoreById.adjustOrPutValue(id, weightedScore, weightedScore);
   }
