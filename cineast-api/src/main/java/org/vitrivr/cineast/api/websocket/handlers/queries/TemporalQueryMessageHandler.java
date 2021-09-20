@@ -1,11 +1,18 @@
 package org.vitrivr.cineast.api.websocket.handlers.queries;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.netty.util.collection.IntObjectHashMap;
+import java.io.File;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
@@ -25,6 +32,7 @@ import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
 import org.vitrivr.cineast.core.data.score.SegmentScoreElement;
 import org.vitrivr.cineast.core.temporal.TemporalScoring;
 import org.vitrivr.cineast.standalone.config.Config;
+import org.vitrivr.cineast.standalone.runtime.SegmentInfo;
 import org.vitrivr.cineast.standalone.util.ContinuousRetrievalLogic;
 
 public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<TemporalQuery> {
@@ -38,6 +46,8 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
   public TemporalQueryMessageHandler(ContinuousRetrievalLogic retrievalLogic) {
     this.continuousRetrievalLogic = retrievalLogic;
   }
+
+  QueryInfo queryInfo = new QueryInfo();
 
   @Override
   public void execute(Session session, QueryConfig qconf, TemporalQuery message, Set<String> segmentIdsForWhichMetadataIsFetched, Set<String> objectIdsForWhichMetadataIsFetched) throws Exception {
@@ -87,6 +97,17 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
 
         QueryStage stage = stagedSimilarityQuery.getStages().get(stageIndex);
 
+        queryInfo.setQueryId(qconf.getQueryId().toString());
+
+        // Time and date of query
+        LocalDateTime myDateObj = LocalDateTime.now();
+        DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        String formattedDate = myDateObj.format(myFormatObj);
+        queryInfo.setFormattedDate(formattedDate);
+
+        // create ArrayList for Segments
+        ArrayList<Segment> segment = new ArrayList<>();
+
         /*
          * Iterate over all QueryTerms for this stage and add their results to the list of relevant segments for the next query stage.
          * Only update the list of relevant query terms once we iterated over all terms
@@ -127,6 +148,29 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
 
             cache.get(stageIndex).put(category, results);
             results.forEach(res -> relevantSegments.add(res.key));
+
+            ObjectMapper mapper = new ObjectMapper();
+            ArrayList<SegmentInfo> s = new ArrayList<>();
+            try {
+              s = mapper.readValue(new File("query_one_category.json"),
+                  new TypeReference<ArrayList<SegmentInfo>>() {
+                  });
+            } catch (IOException e) {
+              e.printStackTrace();
+            }
+
+            for (SegmentInfo segmentInfo : s) {
+              for (Segment seg : segment) {
+                if (segmentInfo.getSegment().equals(seg.segment_id)) {
+                  checkCategory(category, segmentInfo, seg);
+                }
+              }
+              Segment newSeg = new Segment();
+              newSeg.setSegment_id(segmentInfo.getSegment());
+              checkCategory(category, segmentInfo, newSeg);
+              segment.add(newSeg);
+              queryInfo.setSegments(segment);
+            }
 
             /*
              * If this is the last stage, we can collect the results and send relevant results per category back the the requester.
@@ -241,12 +285,39 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
       futures.forEach(CompletableFuture::join);
     }
 
+    for (StringDoublePair a : containerResults.get(0)) {
+      for (Segment s : queryInfo.segments) {
+        if (Objects.equals(s.segment_id, a.key)) {
+          s.value = a.value;
+        }
+      }
+    }
+
+    ObjectMapper mapper = new ObjectMapper();
+    try {
+      mapper.writeValue(new File("query-" + qconf.getQueryId() + ".json"), queryInfo);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
     for (Thread cleanupThread : cleanupThreads) {
       cleanupThread.join();
     }
 
     for (Thread thread : metadataRetrievalThreads) {
       thread.join();
+    }
+  }
+
+  private void checkCategory(String category, SegmentInfo segmentInfo, Segment newSeg) {
+    if (category.equals("globalcolor")) {
+      for (String f : segmentInfo.getFeatures().keySet()) {
+        newSeg.global.put(f, segmentInfo.getFeatures().get(f));
+      }
+    } else if (category.equals("localcolor")) {
+      for (String f : segmentInfo.getFeatures().keySet()) {
+        newSeg.local.put(f, segmentInfo.getFeatures().get(f));
+      }
     }
   }
 
