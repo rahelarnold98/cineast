@@ -250,7 +250,6 @@ public class ContinuousQueryDispatcher {
     for (SegmentInfo segment : segments) {
       if (segment.getSegment().equals(id)) {
         segment.features.put(feature, weightedScore);
-        return;
       }
     }
     HashMap<String, Double> f = new HashMap<String, Double>();
