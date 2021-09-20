@@ -1,8 +1,23 @@
 package org.vitrivr.cineast.standalone.runtime;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import gnu.trove.iterator.TDoubleIterator;
 import gnu.trove.map.TObjectDoubleMap;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
@@ -21,10 +36,6 @@ import org.vitrivr.cineast.core.util.MathHelper;
 import org.vitrivr.cineast.core.util.ScoreFusion;
 import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.listener.RetrievalResultListener;
-
-import java.util.*;
-import java.util.concurrent.*;
-import java.util.function.Function;
 
 public class ContinuousQueryDispatcher {
   private static final Logger LOGGER = LogManager.getLogger();
@@ -47,6 +58,8 @@ public class ContinuousQueryDispatcher {
   private final TObjectDoubleMap<Retriever> retrieverWeights;
   private final MediaSegmentReader mediaSegmentReader;
   private final double retrieverWeightSum;
+
+  public final ArrayList<SegmentInfo> segments = new ArrayList<>();
 
   public static List<SegmentScoreElement> retrieve(QueryContainer query,
       TObjectDoubleHashMap<Retriever> retrievers,
@@ -108,6 +121,14 @@ public class ContinuousQueryDispatcher {
     LOGGER.trace("Extracting results with retrievers {}", retrieverWeights);
     List<SegmentScoreElement> segmentScores = this.extractResults(futures, this.mediaSegmentReader);
     LOGGER.trace("Retrieved {} results, finishing", segmentScores.size());
+
+    ObjectMapper mapper = new ObjectMapper();
+    try {
+      mapper.writeValue(new File("query_one_category.json"), segments);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
     this.finish();
     return segmentScores;
   }
@@ -209,12 +230,13 @@ public class ContinuousQueryDispatcher {
             element.getClass().getSimpleName());
         continue;
       }
-      this.addScoreElement(scoreById, element, retrieverWeight);
+      this.addScoreElement(scoreById, element, retrieverWeight,
+          task.getRetriever().getTableNames().get(0));
     }
   }
 
   private void addScoreElement(TObjectDoubleMap<String> scoreById, ScoreElement next,
-      double weight) {
+      double weight, String feature) {
     String id = next.getId();
     double score = next.getScore();
     if (score < 0 || score > 1) {
@@ -224,6 +246,18 @@ public class ContinuousQueryDispatcher {
     }
 
     double weightedScore = score * weight;
+
+    for (SegmentInfo segment : segments) {
+      if (segment.getSegment().equals(id)) {
+        segment.features.put(feature, weightedScore);
+        return;
+      }
+    }
+    HashMap<String, Double> f = new HashMap<String, Double>();
+    f.put(feature, weightedScore);
+    SegmentInfo s = new SegmentInfo(id, f);
+    segments.add(s);
+
     scoreById.adjustOrPutValue(id, weightedScore, weightedScore);
   }
 
