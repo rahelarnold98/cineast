@@ -33,4 +33,10 @@ public class QueryInfo {
     this.segments = segments;
   }
 
+  public void trimSegments(){
+    int k = segments.size();
+    if ( k > 50)
+      segments.subList(50, k).clear();
+  }
+
 }
