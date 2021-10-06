@@ -1,0 +1,26 @@
+plugins {
+    id 'application'
+}
+
+
+application {
+    mainClassName = 'GetRandomThumbnails'
+    applicationDefaultJvmArgs = ["-Xms1G", "-Xmx2G"]
+}
+
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'GetRandomThumbnails'
+        attributes 'Multi-Release': 'true'
+        attributes 'Implementation-Version': '1.xx'
+    }
+}
+
+shadowJar {
+    mergeServiceFiles()
+}
+
+
+
+
