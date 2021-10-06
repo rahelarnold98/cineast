@@ -1,2 +1,4 @@
 rootProject.name = 'cineast'
 include 'cineast-core', 'cineast-api', 'cineast-runtime'
+include 'color-feature-evaluation'
+
