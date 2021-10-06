@@ -118,3 +118,8 @@ task generateOpenApiSpecs(type: JavaExec) {
     args("${config}")
 }
 
+task generateGetRandomThumbnails(type: JavaExec) {
+    classpath = project(":color-feature-evaluation").sourceSets.main.runtimeClasspath
+    main = 'GetRandomThumbnail'
+}
+
