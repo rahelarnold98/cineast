@@ -1,0 +1,415 @@
+{
+  "queryId": "ab0cba57-52d2-422d-a2d8-946dcdccdee5",
+  "formattedDate": "10-10-2021 16:24:10",
+  "segments": [
+    {
+      "segment_id": "v_00167_707",
+      "global": {
+        "features_huehistogram": 0.0
+      },
+      "local": {},
+      "value": null
+    },
+    {
+      "segment_id": "v_02515_65",
+      "global": {
+        "features_huehistogram": 0.0
+      },
+      "local": {},
+      "value": null
+    },
+    {
+      "segment_id": "v_04776_125",
+      "global": {
+        "features_huehistogram": 0.0
+      },
+      "local": {},
+      "value": null
+    },
+    {
+      "segment_id": "v_04383_63",
+      "global": {
+        "features_huehistogram": 0.0
+      },
+      "local": {},
+      "value": null
+    },
+    {
+      "segment_id": "v_02145_158",
+      "global": {
+        "features_huehistogram": 0.0
+      },
+      "local": {},
+      "value": null
+    },
+    {
+      "segment_id": "v_04334_36",
+      "global": {
+        "features_huehistogram": 0.0
+      },
+      "local": {},
+      "value": null
+    },
+    {
+      "segment_id": "v_02031_6",
+      "global": {
+        "features_huehistogram": 0.0
+      },
+      "local": {},
+      "value": null
+    },
+    {
+      "segment_id": "v_04354_20",
+      "global": {
+        "features_huehistogram": 0.0
+      },
+      "local": {},
+      "value": null
+    },
+    {
+      "segment_id": "v_03104_79",
+      "global": {
+        "features_huehistogram": 0.0
+      },
+      "local": {},
+      "value": null
+    },
+    {
+      "segment_id": "v_02090_297",
+      "global": {
+        "features_huehistogram": 0.0
+      },
+      "local": {},
+      "value": null
+    },
+    {
+      "segment_id": "v_04809_1448",
+      "global": {
+        "features_huehistogram": 0.0
+      },
+      "local": {},
+      "value": null
+    },
+    {
+      "segment_id": "v_04125_92",
+      "global": {
+        "features_huehistogram": 0.0
+      },
+      "local": {},
+      "value": null
+    },
+    {
+      "segment_id": "v_03984_15",
+      "global": {
+        "features_huehistogram": 0.0
+      },
+      "local": {},
+      "value": null
+    },
+    {
+      "segment_id": "v_05130_2",
+      "global": {
+        "features_huehistogram": 0.0
+      },
+      "local": {},
+      "value": null
+    },
+    {
+      "segment_id": "v_00558_140",
+      "global": {
+        "features_huehistogram": 0.0
+      },
+      "local": {},
+      "value": null
+    },
+    {
+      "segment_id": "v_05709_1244",
+      "global": {
+        "features_huehistogram": 0.0
+      },
+      "local": {},
+      "value": null
+    },
+    {
+      "segment_id": "v_00837_102",
+      "global": {
+        "features_huehistogram": 0.0
+      },
+      "local": {},
+      "value": null
+    },
+    {
+      "segment_id": "v_01191_53",
+      "global": {
+        "features_huehistogram": 0.0
+      },
+      "local": {},
+      "value": null
+    },
+    {
+      "segment_id": "v_06699_92",
+      "global": {
+        "features_huehistogram": 0.0
+      },
+      "local": {},
+      "value": null
+    },
+    {
+      "segment_id": "v_05206_163",
+      "global": {
+        "features_huehistogram": 0.0
+      },
+      "local": {},
+      "value": null
+    },
+    {
+      "segment_id": "v_01264_6",
+      "global": {
+        "features_huehistogram": 0.0
+      },
+      "local": {},
+      "value": null
+    },
+    {
+      "segment_id": "v_05320_77",
+      "global": {
+        "features_huehistogram": 0.0
+      },
+      "local": {},
+      "value": null
+    },
+    {
+      "segment_id": "v_02353_74",
+      "global": {
+        "features_huehistogram": 0.0
+      },
+      "local": {},
+      "value": null
+    },
+    {
+      "segment_id": "v_06608_542",
+      "global": {
+        "features_huehistogram": 0.0
+      },
+      "local": {},
+      "value": null
+    },
+    {
+      "segment_id": "v_02796_193",
+      "global": {
+        "features_huehistogram": 0.0
+      },
+      "local": {},
+      "value": null
+    },
+    {
+      "segment_id": "v_00779_325",
+      "global": {
+        "features_huehistogram": 0.0
+      },
+      "local": {},
+      "value": null
+    },
+    {
+      "segment_id": "v_05981_195",
+      "global": {
+        "features_huehistogram": 0.0,
+        "features_AverageFuzzyHist": 0.0
+      },
+      "local": {
+        "features_AverageColorRaster": 0.28515625
+      },
+      "value": null
+    },
+    {
+      "segment_id": "v_00929_78",
+      "global": {
+        "features_huehistogram": 0.0
+      },
+      "local": {},
+      "value": null
+    },
+    {
+      "segment_id": "v_02275_320",
+      "global": {
+        "features_huehistogram": 0.0
+      },
+      "local": {},
+      "value": null
+    },
+    {
+      "segment_id": "v_06559_35",
+      "global": {
+        "features_huehistogram": 0.0
+      },
+      "local": {},
+      "value": null
+    },
+    {
+      "segment_id": "v_01824_31",
+      "global": {
+        "features_huehistogram": 0.0
+      },
+      "local": {},
+      "value": null
+    },
+    {
+      "segment_id": "v_01688_108",
+      "global": {
+        "features_huehistogram": 0.0
+      },
+      "local": {},
+      "value": null
+    },
+    {
+      "segment_id": "v_02425_175",
+      "global": {
+        "features_huehistogram": 0.0
+      },
+      "local": {},
+      "value": null
+    },
+    {
+      "segment_id": "v_00128_192",
+      "global": {
+        "features_huehistogram": 0.0
+      },
+      "local": {},
+      "value": null
+    },
+    {
+      "segment_id": "v_04743_520",
+      "global": {
+        "features_huehistogram": 0.0
+      },
+      "local": {},
+      "value": null
+    },
+    {
+      "segment_id": "v_05206_102",
+      "global": {
+        "features_huehistogram": 0.0
+      },
+      "local": {},
+      "value": null
+    },
+    {
+      "segment_id": "v_01953_27",
+      "global": {
+        "features_huehistogram": 0.0
+      },
+      "local": {
+        "features_AverageColorGrid8": 0.5321544562336376
+      },
+      "value": 0.04950274011475698
+    },
+    {
+      "segment_id": "v_06532_38",
+      "global": {
+        "features_huehistogram": 0.0
+      },
+      "local": {},
+      "value": null
+    },
+    {
+      "segment_id": "v_01050_225",
+      "global": {
+        "features_huehistogram": 0.0
+      },
+      "local": {},
+      "value": null
+    },
+    {
+      "segment_id": "v_04254_535",
+      "global": {
+        "features_huehistogram": 0.0,
+        "features_MedianFuzzyHist": 0.0,
+        "features_AverageFuzzyHist": 0.0
+      },
+      "local": {
+        "features_AverageColorRaster": 0.3125
+      },
+      "value": null
+    },
+    {
+      "segment_id": "v_07186_18",
+      "global": {
+        "features_huehistogram": 0.0
+      },
+      "local": {},
+      "value": null
+    },
+    {
+      "segment_id": "v_06746_158",
+      "global": {
+        "features_huehistogram": 0.0
+      },
+      "local": {},
+      "value": null
+    },
+    {
+      "segment_id": "v_03719_147",
+      "global": {
+        "features_huehistogram": 0.0
+      },
+      "local": {},
+      "value": null
+    },
+    {
+      "segment_id": "v_04205_16",
+      "global": {
+        "features_huehistogram": 0.0
+      },
+      "local": {},
+      "value": null
+    },
+    {
+      "segment_id": "v_04320_226",
+      "global": {
+        "features_huehistogram": 0.0
+      },
+      "local": {},
+      "value": null
+    },
+    {
+      "segment_id": "v_04629_306",
+      "global": {
+        "features_huehistogram": 0.0
+      },
+      "local": {},
+      "value": null
+    },
+    {
+      "segment_id": "v_06641_20",
+      "global": {
+        "features_huehistogram": 0.0
+      },
+      "local": {},
+      "value": null
+    },
+    {
+      "segment_id": "v_04009_61",
+      "global": {
+        "features_huehistogram": 0.0
+      },
+      "local": {},
+      "value": null
+    },
+    {
+      "segment_id": "v_04151_87",
+      "global": {
+        "features_huehistogram": 0.0
+      },
+      "local": {},
+      "value": null
+    },
+    {
+      "segment_id": "v_04809_487",
+      "global": {
+        "features_huehistogram": 0.0
+      },
+      "local": {},
+      "value": null
+    }
+  ]
+}
