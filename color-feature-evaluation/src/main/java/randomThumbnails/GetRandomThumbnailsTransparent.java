@@ -13,10 +13,10 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class GetRandomThumbailsTransparent {
+public class GetRandomThumbnailsTransparent {
 
   public static final String pathThumbnails = "/tank/thumbnails/";
-  public static final String pathDirectory = "color-feature-eval";
+  public static final String pathDirectory = "../color-feature-eval";
 
   public static void main(String[] args) throws IOException {
     List<String> files = null;

@@ -8,13 +8,30 @@ application {
     applicationDefaultJvmArgs = ["-Xms1G", "-Xmx2G"]
 }
 
+dependencies {
+    //testCompile group: 'junit', name: 'junit', version: '4.12'
+    // https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java
+    compile group: 'org.seleniumhq.selenium', name: 'selenium-java',
+            version: '3.141.59'
+    // https://mvnrepository.com/artifact/io.cucumber/cucumber-java
+    compile group: 'io.cucumber', name: 'cucumber-java', version: '5.6.0'
+    // https://mvnrepository.com/artifact/io.cucumber/cucumber-junit
+    testCompile group: 'io.cucumber', name: 'cucumber-junit', version: '5.6.0'
+    // https://mvnrepository.com/artifact/org.hamcrest/hamcrest
+    testCompile group: 'org.hamcrest', name: 'hamcrest', version: '2.2'
+    // https://mvnrepository.com/artifact/commons-io/commons-io
+    implementation group: 'commons-io', name: 'commons-io', version: '2.6'
+}
 
-jar {
-    manifest {
-        attributes 'Main-Class': 'GetRandomThumbnails'
-        attributes 'Multi-Release': 'true'
-        attributes 'Implementation-Version': '1.xx'
-    }
+
+task(runThumbnailsComplete, dependsOn: 'classes', type: JavaExec) {
+    main = 'randomThumbnails.GetRandomThumbnailsComplete'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+task(runThumbnailsTransparent, dependsOn: 'classes', type: JavaExec) {
+    main = 'randomThumbnails.GetRandomThumbnailsTransparent'
+    classpath = sourceSets.main.runtimeClasspath
 }
 
 shadowJar {
