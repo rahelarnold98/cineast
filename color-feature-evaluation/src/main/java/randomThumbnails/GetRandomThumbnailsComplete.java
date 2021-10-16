@@ -1,3 +1,5 @@
+package randomThumbnails;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
@@ -10,7 +12,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class GetRandomThumbnails {
+public class GetRandomThumbnailsComplete {
 
   public static final String pathThumbnails = "/tank/thumbnails/";
   public static final String pathDirectory = "color-feature-eval";
@@ -44,7 +46,7 @@ public class GetRandomThumbnails {
       segments.add(files.get(randomIndex));
     }
 
-    if(!Files.exists(Paths.get(pathDirectory))){
+    if (!Files.exists(Paths.get(pathDirectory))) {
       Files.createDirectories(Paths.get(pathDirectory));
     }
 
