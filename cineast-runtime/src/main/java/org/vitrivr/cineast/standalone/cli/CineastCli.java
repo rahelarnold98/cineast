@@ -9,7 +9,7 @@ import org.vitrivr.cineast.standalone.cli.db.LSC21TemporalUpdateCommand;
     DropTableCommand.class, TagRetrievalCommand.class, OptimizeEntitiesCommand.class,
     CodebookCommand.class, DatabaseSetupCommand.class, ExtractionCommand.class, ImportCommand.class,
     ThreeDeeTestCommand.class, RetrieveCommand.class, Help.class, SingleObjRetrievalCommand.class,
-    TextRetrievalCommand.class, DistinctColumnApiCommand.class,
+    TextRetrievalCommand.class, ImageRetrievalCommand.class, DistinctColumnApiCommand.class,
     LSC21TemporalUpdateCommand.class}, defaultCommand = Help.class)
 public class CineastCli {
 
