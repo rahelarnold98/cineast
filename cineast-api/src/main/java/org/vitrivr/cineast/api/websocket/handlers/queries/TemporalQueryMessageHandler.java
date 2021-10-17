@@ -317,8 +317,11 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
       queryInfo.trimSegments();
 
       ObjectMapper mapper = new ObjectMapper();
+      //message.getQueries().
       try {
-        mapper.writeValue(new File("query-" + qconf.getQueryId() + ".json"), queryInfo);
+        String data =  message.getQueries().get(0).getStages().get(0).terms.get(0).getData();
+        data = data.replace("/", "_");
+        mapper.writeValue(new File("q-" + data.substring(22,222) + ".json"), queryInfo);
       } catch (IOException e) {
         e.printStackTrace();
       }
