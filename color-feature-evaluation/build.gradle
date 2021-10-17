@@ -34,6 +34,11 @@ task(runThumbnailsTransparent, dependsOn: 'classes', type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
 }
 
+task(runRobot, dependsOn: 'classes', type: JavaExec) {
+    main = 'automatedQueries.WithRobot'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
 shadowJar {
     mergeServiceFiles()
 }
