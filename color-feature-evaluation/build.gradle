@@ -39,6 +39,11 @@ task(runRobot, dependsOn: 'classes', type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
 }
 
+task(runQueries, dependsOn: 'classes', type: JavaExec) {
+    main = 'automatedQueries.AutomatedQueriesOfSketches'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
 shadowJar {
     mergeServiceFiles()
 }
