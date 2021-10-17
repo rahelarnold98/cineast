@@ -75,6 +75,16 @@ public class QueryTerm {
 
 
   /**
+   * Getter for data of this {@link QueryTerm}.
+   *
+   * @return The data of this {@link QueryTerm}.
+   */
+  public String getData() {
+    return data;
+  }
+
+
+  /**
    * Converts the {@link QueryTerm} to a {@link QueryContainer} that can be processed by the retrieval pipeline. This includes conversion of query-objects from the Base64 encoded representation.
    *
    * <strong>IMPORTANT:</strong> Subsequent calls to this method return a cached version of the original {@link QueryContainer}.
