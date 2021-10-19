@@ -1,5 +1,5 @@
 {
-  "pathToThumbnails": "./thumbnails",
+  "pathToSketches": "./sketches",
   "pathDictionary": "./dict",
   "nameDictionary": "dict.json",
   "webdriver": "chromedriver",
