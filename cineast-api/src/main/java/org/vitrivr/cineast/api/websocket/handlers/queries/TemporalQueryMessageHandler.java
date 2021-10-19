@@ -44,6 +44,8 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
 
   private final ContinuousRetrievalLogic continuousRetrievalLogic;
 
+  private int queryNumber = 0;
+
   public TemporalQueryMessageHandler(ContinuousRetrievalLogic retrievalLogic) {
     this.continuousRetrievalLogic = retrievalLogic;
   }
@@ -309,6 +311,10 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
     }
 
     if (JsonQuery.createFile) {
+      File jsonPath = new File(JsonQuery.path);
+      if (!jsonPath.exists()){
+        jsonPath.mkdir();
+      }
       try {
         queryInfo.segments.sort(Segment.COMPARATOR.reversed());
       } catch (Exception ignored) {
@@ -317,11 +323,9 @@ public class TemporalQueryMessageHandler extends AbstractQueryMessageHandler<Tem
       queryInfo.trimSegments();
 
       ObjectMapper mapper = new ObjectMapper();
-      //message.getQueries().
       try {
-        String data =  message.getQueries().get(0).getStages().get(0).terms.get(0).getData();
-        data = data.replace("/", "_");
-        mapper.writeValue(new File("q-" + data.substring(22,222) + ".json"), queryInfo);
+        mapper.writeValue(new File(JsonQuery.path + "/" + "query-" + queryNumber + ".json"), queryInfo);
+        queryNumber++;
       } catch (IOException e) {
         e.printStackTrace();
       }

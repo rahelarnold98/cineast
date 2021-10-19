@@ -6,6 +6,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class JsonQuery {
 
   public static boolean createFile;
+  public static String path = "json-queries/";
+
+
+  @JsonCreator
+  public JsonQuery() {
+  }
 
   @JsonProperty
   public boolean getCreateFile() {
@@ -13,10 +19,16 @@ public class JsonQuery {
   }
 
   public void setCreateFile(boolean createFile) {
-    this.createFile = createFile;
+    JsonQuery.createFile = createFile;
   }
 
-  @JsonCreator
-  public JsonQuery(){}
+  @JsonProperty
+  public String getPath() {
+    return path;
+  }
+
+  public void setPath(String test) {
+    JsonQuery.path = test;
+  }
 
 }

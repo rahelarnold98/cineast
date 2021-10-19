@@ -170,7 +170,8 @@
   },
 
   "jsonQuery": {
-    "createFile": true
+    "createFile": true,
+    "path": "./json-queries"
   }
 
 }
