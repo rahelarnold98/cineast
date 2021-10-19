@@ -1,7 +1,9 @@
 package automatedQueries;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.io.FileUtils;
@@ -18,15 +20,26 @@ public class AutomatedQueriesOfSketches {
 
   public static void main(String[] args) throws InterruptedException, IOException {
 
+    ColorFeatureEvaluation colorFeatureEvaluation = new ColorFeatureEvaluation();
+    ObjectMapper mapper = new ObjectMapper();
+    try {
+      colorFeatureEvaluation = mapper.readValue(new File("ColorFeatureEvaluation.json"), ColorFeatureEvaluation.class);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    ArrayList<Entry> dictionary = new ArrayList<>();
+
     // String path = "set path to directory only containing sketches";
-    String path = "/Users/rahelarnold/Desktop/Master Project/cineast/sketches/png";
+    String path = colorFeatureEvaluation.getPathToThumbnails();
+    //String path = "/Users/rahelarnold/Desktop/Master Project/cineast/bla";
     // set path to chromedriver
-    System.setProperty("webdriver.chrome.driver", "/Users/rahelarnold/Downloads/chromedriver");
+    //System.setProperty("webdriver.chrome.driver", "/Users/rahelarnold/Downloads/chromedriver");
+    System.setProperty("webdriver.chrome.driver", colorFeatureEvaluation.getWebdriver());
     WebDriver driver = new ChromeDriver();
     driver.manage().timeouts().implicitlyWait(120, TimeUnit.SECONDS);
 
-    // set ip
-    driver.get("http://10.34.58.163:4567");
+    driver.get("http://" + colorFeatureEvaluation.getIp() + ":" + colorFeatureEvaluation.getPort());
     Thread.sleep(1000);
     WebElement button = driver.findElement(By.cssSelector(
         "body > app-vitrivr > mat-sidenav-container > mat-sidenav.mat-drawer.mat-sidenav.left.ng-tns-c168-0.ng-trigger.ng-trigger-transform.mat-drawer-side.mat-drawer-opened.ng-star-inserted > div > app-query-sidebar > div > app-query-container > div > div:nth-child(2) > div > button:nth-child(1) > mat-icon"));
@@ -38,9 +51,11 @@ public class AutomatedQueriesOfSketches {
     File dir = new File(path);
     File[] directoryListing = dir.listFiles();
     int i = 0;
+    int queryCounter = 0;
     if (directoryListing != null) {
       for (File file : directoryListing) {
         String img = encodeFileToBase64Binary(file.getAbsolutePath());
+        System.out.println(file.getAbsolutePath());
 
         JavascriptExecutor js = (JavascriptExecutor) driver;
         String script =
@@ -49,12 +64,13 @@ public class AutomatedQueriesOfSketches {
 
         js.executeScript
             (script);
-
+        Thread.sleep(1000);
         imageHolder.click();
-
+        Thread.sleep(1000);
         WebElement close = driver.findElement(By.cssSelector(
             "#mat-dialog-" + i
                 + " > app-sketchpad > mat-dialog-content > mat-toolbar > button:nth-child(9) > span.mat-button-wrapper > mat-icon"));
+        Thread.sleep(1000);
         close.click();
         i++;
 
@@ -62,6 +78,7 @@ public class AutomatedQueriesOfSketches {
 
         WebElement search = driver.findElement(By.cssSelector(
             "body > app-vitrivr > mat-sidenav-container > mat-sidenav.mat-drawer.mat-sidenav.left.ng-tns-c168-0.ng-trigger.ng-trigger-transform.mat-drawer-side.mat-drawer-opened.ng-star-inserted > div > app-query-sidebar > div > div:nth-child(1) > button"));
+        Thread.sleep(1000);
         search.click();
         Thread.sleep(2000);
 
@@ -71,18 +88,51 @@ public class AutomatedQueriesOfSketches {
         WebDriverWait wait = new WebDriverWait(driver, 2000);
 
         wait.until(ExpectedConditions.invisibilityOf(loadingBar));
-
+        dictionary.add(new Entry(file.getName(), queryCounter));
+        queryCounter++;
         Thread.sleep(2000);
       }
+
+      try {
+        File dictDir = new File(colorFeatureEvaluation.getPathDictionary());
+        if (!dictDir.exists()){
+          dictDir.mkdir();
+        }
+
+        // specify name
+        mapper.writeValue(new File(
+            colorFeatureEvaluation.getPathDictionary() + "/" + colorFeatureEvaluation.nameDictionary), dictionary);
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+
     }
   }
-
 
   private static String encodeFileToBase64Binary(String filePath) throws IOException {
     byte[] fileContent = FileUtils.readFileToByteArray(new File(filePath));
     String encodedString =
         "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(fileContent);
     return encodedString;
+  }
+
+  static class Entry {
+
+    String name;
+    int number;
+
+    Entry(String name, int number) {
+      this.name = name;
+      this.number = number;
+    }
+
+    public String getName() {
+      return name;
+    }
+
+    public int getNumber() {
+      return number;
+    }
   }
 }
 
