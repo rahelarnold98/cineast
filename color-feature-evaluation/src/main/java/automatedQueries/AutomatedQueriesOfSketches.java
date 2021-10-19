@@ -31,7 +31,7 @@ public class AutomatedQueriesOfSketches {
     ArrayList<Entry> dictionary = new ArrayList<>();
 
     // String path = "set path to directory only containing sketches";
-    String path = colorFeatureEvaluation.getPathToThumbnails();
+    String path = colorFeatureEvaluation.getPathToSketches();
     //String path = "/Users/rahelarnold/Desktop/Master Project/cineast/bla";
     // set path to chromedriver
     //System.setProperty("webdriver.chrome.driver", "/Users/rahelarnold/Downloads/chromedriver");

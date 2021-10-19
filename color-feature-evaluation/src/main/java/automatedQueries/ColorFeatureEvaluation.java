@@ -2,7 +2,7 @@ package automatedQueries;
 
 public class ColorFeatureEvaluation {
 
-  String pathToThumbnails;
+  String pathToSketches;
   String pathDictionary;
   String nameDictionary;
   String webdriver;
@@ -52,11 +52,11 @@ public class ColorFeatureEvaluation {
     this.nameDictionary = nameDictionary;
   }
 
-  public String getPathToThumbnails() {
-    return pathToThumbnails;
+  public String getPathToSketches() {
+    return pathToSketches;
   }
 
-  public void setPathToThumbnails(String pathToThumbnails) {
-    this.pathToThumbnails = pathToThumbnails;
+  public void setPathToSketches(String pathToSketches) {
+    this.pathToSketches = pathToSketches;
   }
 }
