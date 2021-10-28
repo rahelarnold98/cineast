@@ -12,6 +12,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
@@ -103,7 +105,10 @@ public class ExtractionCommand implements Runnable {
         col.addAll(ShotThumbnailsExporter.colors);
         ObjectMapper mapper = new ObjectMapper();
         try {
-          mapper.writeValue(new File("colors.json"), col);
+          LocalDateTime myDateObj = LocalDateTime.now();
+          DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+          String formattedDate = myDateObj.format(myFormatObj);
+          mapper.writeValue(new File("colors-" + formattedDate + ".json"), col);
         } catch (IOException e) {
           e.printStackTrace();
         }
