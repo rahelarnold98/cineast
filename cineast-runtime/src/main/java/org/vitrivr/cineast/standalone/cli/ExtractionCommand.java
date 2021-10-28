@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.standalone.cli;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.rvesse.airline.annotations.Command;
 import com.github.rvesse.airline.annotations.Option;
 import com.github.rvesse.airline.annotations.restrictions.Required;
@@ -11,10 +12,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
 import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.DatabaseConfig;
+import org.vitrivr.cineast.core.features.exporter.ShotThumbnailsExporter;
 import org.vitrivr.cineast.core.iiif.IIIFConfig;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageFactory;
 import org.vitrivr.cineast.core.iiif.presentationapi.v2.ManifestFactory;
@@ -96,6 +99,14 @@ public class ExtractionCommand implements Runnable {
       } catch (ClassCastException e) {
         System.err.println("Could not register completion listener for extraction.");
       } finally {
+        ArrayList<String> col = new ArrayList<>();
+        col.addAll(ShotThumbnailsExporter.colors);
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+          mapper.writeValue(new File("colors.json"), col);
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
         if (postExtractionIIIFCleanup != null) {
           postExtractionIIIFCleanup.run();
         }
