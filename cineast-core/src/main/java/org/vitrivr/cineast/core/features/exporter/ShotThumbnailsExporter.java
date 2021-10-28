@@ -1,5 +1,12 @@
 package org.vitrivr.cineast.core.features.exporter;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.TreeSet;
+import java.util.function.Supplier;
+import javax.imageio.ImageIO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
@@ -9,18 +16,13 @@ import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 import org.vitrivr.cineast.core.util.LogHelper;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.function.Supplier;
-
 public class ShotThumbnailsExporter implements Extractor {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	private static final String PROPERTY_NAME_DESTINATION = "destination";
 	private static final String PROPERTY_NAME_FORMAT = "format";
+
+	public static TreeSet<String> colors = new TreeSet<>();
 
 	/** Destination folder. */
 	private final File folder;
@@ -60,11 +62,16 @@ public class ShotThumbnailsExporter implements Extractor {
 	}
 
 	@Override
-	public void processSegment(SegmentContainer shot) {
+	public void processSegment(SegmentContainer shot) throws IOException {
 		
 		File imageFolder = new File(this.folder, shot.getSuperId());
 		File img = new File(imageFolder, shot.getId() + "." + this.format.toLowerCase());
+
 		if(img.exists()){
+			// get colors
+			BufferedImage bf = ImageIO.read(img);
+			getColors(bf);
+
 			return;
 		}
 		VideoFrame mostRepresentativeFrame = shot.getMostRepresentativeFrame();
@@ -81,6 +88,7 @@ public class ShotThumbnailsExporter implements Extractor {
 				LOGGER.warn("Could not find appropriate writer for thumbnail \"{}\", attempting conversion.", shot.getId());
 				BufferedImage convertedThumb = new BufferedImage(thumb.getWidth(), thumb.getHeight(), BufferedImage.TYPE_INT_RGB);
 				convertedThumb.getGraphics().drawImage(thumb, 0, 0, null);
+				getColors(convertedThumb);
 				writeSuccess = ImageIO.write(convertedThumb, format, img);
 				if (!writeSuccess) {
 					LOGGER.error("Could not find appropriate writer for thumbnail \"{}\", even after conversion!", shot.getId());
@@ -99,4 +107,21 @@ public class ShotThumbnailsExporter implements Extractor {
 
 	@Override
 	public void dropPersistentLayer(Supplier<EntityCreator> supply) { /* Nothing to drop. */ }
+
+
+	public void getColors(BufferedImage bf) {
+		for (int i = 0; i < bf.getHeight(); i++) {
+			for (int j = 0; j < bf.getWidth(); j++) {
+				int pixel = bf.getRGB(j, i);
+				// convert to HEX
+				int red = (pixel >> 16) & 0xff;
+				int green = (pixel >> 8) & 0xff;
+				int blue = (pixel) & 0xff;
+				int alpha = (pixel >> 24) & 0xff;
+				String hex = String.format("#%02x%02x%02x%02x", alpha, red, green, blue);
+				colors.add(hex);
+			}
+		}
+	}
+
 }
