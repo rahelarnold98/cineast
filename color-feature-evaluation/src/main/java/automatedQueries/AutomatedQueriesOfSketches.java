@@ -23,7 +23,8 @@ public class AutomatedQueriesOfSketches {
     ColorFeatureEvaluation colorFeatureEvaluation = new ColorFeatureEvaluation();
     ObjectMapper mapper = new ObjectMapper();
     try {
-      colorFeatureEvaluation = mapper.readValue(new File("ColorFeatureEvaluation.json"), ColorFeatureEvaluation.class);
+      colorFeatureEvaluation = mapper.readValue(new File("ColorFeatureEvaluation.json"),
+          ColorFeatureEvaluation.class);
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -56,52 +57,55 @@ public class AutomatedQueriesOfSketches {
       for (File file : directoryListing) {
         String img = encodeFileToBase64Binary(file.getAbsolutePath());
         System.out.println(file.getAbsolutePath());
+        if (file.getName().startsWith("sketch")) {
 
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-        String script =
-            "document.getElementsByClassName('mat-tooltip-trigger previewimg')[0].setAttribute('src','"
-                + img + "')";
+          JavascriptExecutor js = (JavascriptExecutor) driver;
+          String script =
+              "document.getElementsByClassName('mat-tooltip-trigger previewimg')[0].setAttribute('src','"
+                  + img + "')";
 
-        js.executeScript
-            (script);
-        Thread.sleep(1000);
-        imageHolder.click();
-        Thread.sleep(1000);
-        WebElement close = driver.findElement(By.cssSelector(
-            "#mat-dialog-" + i
-                + " > app-sketchpad > mat-dialog-content > mat-toolbar > button:nth-child(9) > span.mat-button-wrapper > mat-icon"));
-        Thread.sleep(1000);
-        close.click();
-        i++;
+          js.executeScript
+              (script);
+          Thread.sleep(1000);
+          imageHolder.click();
+          Thread.sleep(1000);
+          WebElement close = driver.findElement(By.cssSelector(
+              "#mat-dialog-" + i
+                  + " > app-sketchpad > mat-dialog-content > mat-toolbar > button:nth-child(9) > span.mat-button-wrapper > mat-icon"));
+          Thread.sleep(1000);
+          close.click();
+          i++;
 
-        Thread.sleep(2000);
+          Thread.sleep(2000);
 
-        WebElement search = driver.findElement(By.cssSelector(
-            "body > app-vitrivr > mat-sidenav-container > mat-sidenav.mat-drawer.mat-sidenav.left.ng-tns-c168-0.ng-trigger.ng-trigger-transform.mat-drawer-side.mat-drawer-opened.ng-star-inserted > div > app-query-sidebar > div > div:nth-child(1) > button"));
-        Thread.sleep(1000);
-        search.click();
-        Thread.sleep(2000);
+          WebElement search = driver.findElement(By.cssSelector(
+              "body > app-vitrivr > mat-sidenav-container > mat-sidenav.mat-drawer.mat-sidenav.left.ng-tns-c168-0.ng-trigger.ng-trigger-transform.mat-drawer-side.mat-drawer-opened.ng-star-inserted > div > app-query-sidebar > div > div:nth-child(1) > button"));
+          Thread.sleep(1000);
+          search.click();
+          Thread.sleep(2000);
 
-        WebElement loadingBar = driver.findElement(By.cssSelector(
-            "body > app-vitrivr > div > mat-progress-bar"));
-        Thread.sleep(2000);
-        WebDriverWait wait = new WebDriverWait(driver, 2000);
+          WebElement loadingBar = driver.findElement(By.cssSelector(
+              "body > app-vitrivr > div > mat-progress-bar"));
+          Thread.sleep(2000);
+          WebDriverWait wait = new WebDriverWait(driver, 2000);
 
-        wait.until(ExpectedConditions.invisibilityOf(loadingBar));
-        dictionary.add(new Entry(file.getName(), queryCounter));
-        queryCounter++;
-        Thread.sleep(2000);
+          wait.until(ExpectedConditions.invisibilityOf(loadingBar));
+          dictionary.add(new Entry(file.getName(), queryCounter));
+          queryCounter++;
+          Thread.sleep(2000);
+        }
       }
 
       try {
         File dictDir = new File(colorFeatureEvaluation.getPathDictionary());
-        if (!dictDir.exists()){
+        if (!dictDir.exists()) {
           dictDir.mkdir();
         }
 
         // specify name
         mapper.writeValue(new File(
-            colorFeatureEvaluation.getPathDictionary() + "/" + colorFeatureEvaluation.nameDictionary), dictionary);
+            colorFeatureEvaluation.getPathDictionary() + "/"
+                + colorFeatureEvaluation.nameDictionary), dictionary);
       } catch (IOException e) {
         e.printStackTrace();
       }
