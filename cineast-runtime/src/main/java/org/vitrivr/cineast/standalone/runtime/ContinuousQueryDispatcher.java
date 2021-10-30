@@ -23,7 +23,7 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.LimitedQueue;
 import org.vitrivr.cineast.core.data.Pair;
-import org.vitrivr.cineast.core.data.query.containers.QueryContainer;
+import org.vitrivr.cineast.core.data.query.containers.AbstractQueryTermContainer;
 import org.vitrivr.cineast.core.data.score.BooleanSegmentScoreElement;
 import org.vitrivr.cineast.core.data.score.ObjectScoreElement;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
@@ -37,6 +37,10 @@ import org.vitrivr.cineast.core.util.ScoreFusion;
 import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.config.JsonQuery;
 import org.vitrivr.cineast.standalone.listener.RetrievalResultListener;
+
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.function.Function;
 
 public class ContinuousQueryDispatcher {
   private static final Logger LOGGER = LogManager.getLogger();
@@ -62,7 +66,7 @@ public class ContinuousQueryDispatcher {
 
   public final ArrayList<SegmentInfo> segments = new ArrayList<>();
 
-  public static List<SegmentScoreElement> retrieve(QueryContainer query,
+  public static List<SegmentScoreElement> retrieve(AbstractQueryTermContainer query,
       TObjectDoubleHashMap<Retriever> retrievers,
       RetrieverInitializer initializer,
       ReadableQueryConfig config,

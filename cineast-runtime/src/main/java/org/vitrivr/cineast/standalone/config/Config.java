@@ -27,7 +27,6 @@ public class Config {
     private ExtractionPipelineConfig extractor;
     private CacheConfig cache;
     private HashMap<MediaType, DecoderConfig> decoders;
-    private BenchmarkConfig benchmark = new BenchmarkConfig();
     private MonitoringConfig monitoring = new MonitoringConfig();
     private JsonQuery jsonQuery = new JsonQuery();
 
@@ -118,14 +117,6 @@ public class Config {
     }
     public void setDecoders(HashMap<MediaType, DecoderConfig> decoders) {
         this.decoders = decoders;
-    }
-
-    @JsonProperty
-    public BenchmarkConfig getBenchmark() {
-        return benchmark;
-    }
-    public void setBenchmark(BenchmarkConfig benchmark) {
-        this.benchmark = benchmark;
     }
 
     @JsonProperty
