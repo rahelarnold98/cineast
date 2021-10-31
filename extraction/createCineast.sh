@@ -14,6 +14,6 @@ for i in $(seq 1 32); do
   # changeObjectLocation
   sed -i "s/\"objectLocation\": \".\/v3c1-mini\",/\"objectLocation\": \"\/mnt\/hdd\/extractionV3C2\/video_split${i}\",/g" ../cineast_config/cineast$i.json
   # changeVitrivrngLocation
-  sed -i "s/\"uiLocation\": \"..\/vitrivr-ng\/dist\",/\"uiLocation\": \"\/home\/ubuntu\/vitrivr-ng\",/g" ../cineast_config/cineast$i.json
+  sed -i "s/\"uiLocation\": \"..\/vitrivr-ng\/dist\",/\"uiLocation\": \"\/home\/ubuntu\/vitrivr-ng\/dis\",/g" ../cineast_config/cineast$i.json
 
 done
