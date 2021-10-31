@@ -43,7 +43,7 @@
 		{
 			"name": "ShotThumbnailsExporter",
 			"properties": {
-				"destination":"pathThumbnails/"
+				"destination": "pathThumbnails/"
 			}
 		}
 	],
