@@ -154,6 +154,7 @@
     "enableLegacy": false,
     "httpPort": 4567,
     "httpsPort": 4568,
+    "grpcPort": 4569,
     "legacyPort": 12345,
     "threadPoolSize": 12,
     "serveContent": true,
@@ -165,7 +166,7 @@
   },
 
   "monitoring":{
-    "enablePrometheus": false,
+    "enablePrometheus": true,
     "prometheusPort": 4569
   },
 
