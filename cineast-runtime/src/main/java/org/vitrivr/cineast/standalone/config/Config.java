@@ -6,7 +6,6 @@ import java.io.File;
 import java.util.HashMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vitrivr.cineast.core.config.BenchmarkConfig;
 import org.vitrivr.cineast.core.config.CacheConfig;
 import org.vitrivr.cineast.core.config.DatabaseConfig;
 import org.vitrivr.cineast.core.config.DecoderConfig;

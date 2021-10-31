@@ -5,7 +5,7 @@ import com.github.rvesse.airline.annotations.Command;
 import com.github.rvesse.airline.annotations.Option;
 import java.util.ArrayList;
 import java.util.List;
-import org.vitrivr.cineast.core.data.query.containers.ImageQueryContainer;
+import org.vitrivr.cineast.core.data.query.containers.ImageQueryTermContainer;
 import org.vitrivr.cineast.core.features.AudioTranscriptionSearch;
 import org.vitrivr.cineast.core.features.AverageColorARP44;
 import org.vitrivr.cineast.core.features.AverageColorARP44Normalized;
@@ -39,7 +39,7 @@ public class ImageRetrievalCommand implements Runnable {
   public void run() {
     final ContinuousRetrievalLogic retrieval = new ContinuousRetrievalLogic(Config.sharedConfig().getDatabase());
     System.out.println("Querying for image " + image);
-    ImageQueryContainer qc = new ImageQueryContainer(image);
+    ImageQueryTermContainer qc = new ImageQueryTermContainer(image);
     List<Retriever> retrievers = new ArrayList<>();
     retrievers.add(new AverageColorARP44());
     retrievers.add(new AverageColorARP44Normalized());

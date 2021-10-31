@@ -441,7 +441,7 @@ public class APIEndpoint {
    */
   private void registerServingRoutes(final Javalin service, final APIConfig config) {
     if (config.getServeContent()) {
-      service.get("/thumbnails/:id", new ResolvedContentRoute(
+      service.get("/thumbnails/{id}", new ResolvedContentRoute(
           new FileSystemThumbnailResolver(
               new File(Config.sharedConfig().getApi().getThumbnailLocation()))));
 
@@ -464,7 +464,7 @@ public class APIEndpoint {
                 Config.sharedConfig().getDatabase().getSelectorSupplier().get()));
       }
 
-      service.get("/objects/:id", new ResolvedContentRoute(fsor
+      service.get("/objects/{id}", new ResolvedContentRoute(fsor
       ));
     }
   }
