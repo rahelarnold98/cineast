@@ -28,6 +28,7 @@ public class Config {
     private HashMap<MediaType, DecoderConfig> decoders;
     private MonitoringConfig monitoring = new MonitoringConfig();
     private JsonQuery jsonQuery = new JsonQuery();
+    public static String configName = "";
 
     /**
      * Accessor for shared (i.e. application wide) configuration.
@@ -36,6 +37,7 @@ public class Config {
      */
     public synchronized static Config sharedConfig() {
         if (sharedConfig == null) {
+            configName = "cineast.json";
             loadConfig("cineast.json");
         }
         return sharedConfig;
@@ -47,6 +49,7 @@ public class Config {
      * @param name Name of the config file.
      */
   public static Config loadConfig(String name) {
+    configName = name;
     final Config config = (new JacksonJsonProvider()).toObject(new File(name), Config.class);
     if (config == null) {
       LOGGER.warn("Could not read config file '{}'.", name);

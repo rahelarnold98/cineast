@@ -25,6 +25,7 @@ import org.vitrivr.cineast.core.iiif.discoveryapi.v1.OrderedCollectionFactory;
 import org.vitrivr.cineast.core.iiif.imageapi.ImageFactory;
 import org.vitrivr.cineast.core.iiif.presentationapi.v2.ManifestFactory;
 import org.vitrivr.cineast.core.util.json.JacksonJsonProvider;
+import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.config.IngestConfig;
 import org.vitrivr.cineast.standalone.config.InputConfig;
 import org.vitrivr.cineast.standalone.run.ExtractionCompleteListener;
@@ -108,7 +109,8 @@ public class ExtractionCommand implements Runnable {
           LocalDateTime myDateObj = LocalDateTime.now();
           DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
           String formattedDate = myDateObj.format(myFormatObj);
-          mapper.writeValue(new File("colors-" + formattedDate + ".json"), col);
+          String conf = Config.configName.substring(0, Config.configName.length()-5);
+          mapper.writeValue(new File("colors-" + conf + "-" + formattedDate +  ".json"), col);
         } catch (IOException e) {
           e.printStackTrace();
         }
