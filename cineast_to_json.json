@@ -160,8 +160,8 @@
     "serveContent": true,
     "serveUI": true,
     "uiLocation": "../vitrivr-ng/dist",
-    "thumbnailLocation": "./thumbnails_export_to_file",
-    "objectLocation": "./v3c1-mini_small",
+    "thumbnailLocation": "./thumbnails",
+    "objectLocation": "./v3c1-mini",
     "objectsFilesAreIDed": false
   },
 
