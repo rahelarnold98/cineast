@@ -11,12 +11,15 @@
     "path": "benchmarks"
   },
   "retriever": {
-    "threadPoolSize": 2,
-    "maxResults": 10000,
+    "threadPoolSize": 16,
+    "maxResults": 50000,
     "resultsPerModule": 5000,
     "features": {
-      "semantic" : [
-        {"feature": "ConceptMasksAde20k", "weight" : 1.0}
+      "semantic": [
+        {
+          "feature": "ConceptMasksAde20k",
+          "weight": 1.0
+        }
       ],
       "globalcolor": [
         {
@@ -67,55 +70,101 @@
         }
       ],
       "edge": [
-        {"feature": "EHD", "weight": 0.7},
-        {"feature": "DominantEdgeGrid16", "weight": 1.4},
-        {"feature": "DominantEdgeGrid8", "weight": 1.4}
+        {
+          "feature": "EHD",
+          "weight": 0.7
+        },
+        {
+          "feature": "EdgeARP88",
+          "weight": 0.7
+        },
+        {
+          "feature": "EdgeGrid16",
+          "weight": 0.7
+        },
+        {
+          "feature": "DominantEdgeGrid16",
+          "weight": 1.4
+        },
+        {
+          "feature": "DominantEdgeGrid8",
+          "weight": 1.4
+        }
       ],
       "motion": [
-        {"feature": "SubDivMotionHistogram3", "weight": 0.5},
-        {"feature": "SubDivMotionHistogram5", "weight": 0.5},
-        {"feature": "SubDivMotionHistogramBackground3", "weight": 0.5},
-        {"feature": "SubDivMotionHistogramBackground5", "weight": 0.5}
+        {
+          "feature": "SubDivMotionHistogram3",
+          "weight": 0.5
+        },
+        {
+          "feature": "SubDivMotionHistogram5",
+          "weight": 0.5
+        },
+        {
+          "feature": "SubDivMotionHistogramBackground3",
+          "weight": 0.5
+        },
+        {
+          "feature": "SubDivMotionHistogramBackground5",
+          "weight": 0.5
+        }
       ],
       "quantized": [
-
+      ],
+      "audio": [
+        {
+          "feature": "AudioFingerprint",
+          "weight": 0.5
+        }
       ],
       "localfeatures": [
-        {"feature": "HOGMirflickr25K512", "weight": 1.0}
-      ],
-      "localfeatures_fast": [
-        {"feature": "HOGMirflickr25K256", "weight": 1.0}
-      ],
-      "audiofingerprint": [
-        {"feature": "HPCP12Shingle", "weight": 1.0}
+        {
+          "feature": "HOGMirflickr25K512",
+          "weight": 1.0
+        },
+        {
+          "feature": "SURFMirflickr25K512",
+          "weight": 1.0
+        }
       ],
       "tags": [
-        {"feature": "SegmentTags", "weight": 1.0}
+        {
+          "feature": "SegmentTags",
+          "weight": 1.0
+        }
       ],
       "ocr": [
-        {"feature": "OCRSearch", "weight": 1.0}
+        {
+          "feature": "OCRSearch",
+          "weight": 1.0
+        }
       ],
       "asr": [
-        {"feature":  "AudioTranscriptionSearch", "weight":  1.0}
+        {
+          "feature": "AudioTranscriptionSearch",
+          "weight": 1.0
+        }
       ],
       "scenecaption": [
-        {"feature":  "DescriptionTextSearch", "weight":  1.0}
+        {
+          "feature": "DescriptionTextSearch",
+          "weight": 1.0
+        }
       ],
       "objectInstances": [
-        {"feature":  "ObjectInstances", "weight":  1.0}
-      ],
-      "boolean": [
         {
-          "feature": "RangeBooleanRetriever", "weight": 1.0,
-          "properties": {
-            "entity": "features_table_lsc20meta",
-            "attribute": "minute_id,utc_time,local_time,timezone,lat,lon,semantic_name,elevation,speed,heart,calories,activity_type,steps,p_utc_standard,p_local_standard,p_day_of_week,p_phase_of_day,p_year,p_month,p_hour,p_day"
-          }
+          "feature": "ObjectInstances",
+          "weight": 1.0
+        }
+      ],
+      "visualtextcoembedding": [
+        {
+          "feature": "VisualTextCoEmbedding",
+          "weight": 1.0
         }
       ]
     }
   },
-
   "decoders": {
     "VIDEO": {
       "decoder": "FFMpegVideoDecoder",
@@ -138,12 +187,10 @@
       }
     }
   },
-
   "extractor": {
     "threadPoolSize": 4,
     "outputLocation": "out"
   },
-
   "api": {
     "enableCLI": true,
     "enableWebsocket": true,
@@ -164,15 +211,12 @@
     "objectLocation": "./v3c1-mini",
     "objectsFilesAreIDed": false
   },
-
-  "monitoring":{
+  "monitoring": {
     "enablePrometheus": true,
     "prometheusPort": 4569
   },
-
   "jsonQuery": {
     "createFile": true,
     "path": "./json-queries"
   }
-
 }

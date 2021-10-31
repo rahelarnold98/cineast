@@ -10,6 +10,7 @@
 	},
 	"extractors":[
 		{"name": "ConceptMasksAde20k"},
+		{"name": "AverageColor"},
 		{"name": "MedianColor"},
 		{"name": "MedianFuzzyHist"},
 		{"name": "AverageFuzzyHist"},
