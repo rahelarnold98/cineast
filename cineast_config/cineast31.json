@@ -206,9 +206,9 @@
     "threadPoolSize": 12,
     "serveContent": true,
     "serveUI": true,
-    "uiLocation": "/home/ubuntu/vitrivr-ng",
-    "thumbnailLocation": "./thumbnails",
-    "objectLocation": "/mnt/hdd/extractionV3C2/video_split31",
+    "uiLocation": "/home/ubuntu/vitrivr-ng/dist",
+    "thumbnailLocation": "./thumbnails-delete",
+    "objectLocation": "/mnt/hdd/test",
     "objectsFilesAreIDed": false
   },
   "monitoring": {
@@ -217,6 +217,6 @@
   },
   "jsonQuery": {
     "createFile": true,
-    "path": "./json-queries"
+    "path": "./json-queries-delete"
   }
 }
