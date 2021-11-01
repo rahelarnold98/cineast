@@ -1,6 +1,6 @@
 {
 	"input":{
-		"path": "pathSource",
+		"path": "/mnt/hdd/extractionV3C2/video_split25",
 		"depth": 3,
 		"skip": 0,
 		"id": {
@@ -35,13 +35,13 @@
 		{
 			"name": "ShotThumbnailsExporter",
 			"properties": {
-				"destination": "pathThumbnails/"
+				"destination": "/mnt/hdd/thumbnails25"
 			}
 		}
 	],
 	"database":{
 		"selector": "JSON",
 		"writer": "JSON",
-		"host": "pathOutput/"
+		"host": "/mnt/hdd/output25"
 	}
 }
