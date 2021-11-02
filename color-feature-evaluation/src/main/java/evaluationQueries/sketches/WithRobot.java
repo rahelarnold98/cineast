@@ -1,4 +1,4 @@
-package automatedQueries;
+package evaluationQueries.sketches;
 
 import java.awt.AWTException;
 import java.awt.Robot;

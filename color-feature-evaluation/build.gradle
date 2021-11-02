@@ -10,6 +10,7 @@ application {
 
 dependencies {
     compile project(':cineast-core')
+    compile project(':cineast-api')
     //testCompile group: 'junit', name: 'junit', version: '4.12'
     // https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java
     compile group: 'org.seleniumhq.selenium', name: 'selenium-java',
@@ -36,12 +37,12 @@ task(runThumbnailsTransparent, dependsOn: 'classes', type: JavaExec) {
 }
 
 task(runRobot, dependsOn: 'classes', type: JavaExec) {
-    main = 'automatedQueries.WithRobot'
+    main = 'evaluationQueries.sketches.WithRobot'
     classpath = sourceSets.main.runtimeClasspath
 }
 
 task(runQueries, dependsOn: 'classes', type: JavaExec) {
-    main = 'automatedQueries.AutomatedQueriesOfSketches'
+    main = 'evaluationQueries.sketches.AutomatedQueriesOfSketches'
     classpath = sourceSets.main.runtimeClasspath
 }
 

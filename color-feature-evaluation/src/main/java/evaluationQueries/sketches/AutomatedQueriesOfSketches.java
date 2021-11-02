@@ -1,4 +1,4 @@
-package automatedQueries;
+package evaluationQueries.sketches;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
@@ -31,7 +31,7 @@ public class AutomatedQueriesOfSketches {
 
     ArrayList<Entry> dictionary = new ArrayList<>();
 
-    // String path = "set path to directory only containing sketches";
+    // String path = "set path to directory only containing automatedQueries.sketches";
     String path = colorFeatureEvaluation.getPathToSketches();
     //String path = "/Users/rahelarnold/Desktop/Master Project/cineast/bla";
     // set path to chromedriver

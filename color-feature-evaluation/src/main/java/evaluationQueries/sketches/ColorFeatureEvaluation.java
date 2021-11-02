@@ -1,4 +1,4 @@
-package automatedQueries;
+package evaluationQueries.sketches;
 
 public class ColorFeatureEvaluation {
 
