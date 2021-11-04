@@ -11,8 +11,8 @@ import java.util.Random;
 
 public class GetColorPlaces {
 
-  public static final int grid = 4; // set grid
-  public static final int colField = 4; // set colored fields
+  public static final int grid = 3; // set grid
+  public static final int colField = 2; // set colored fields
   public static final int count = 25; // number of grid
   public static final String pathDirectory = "color-feature-evaluation/color-feature-eval";
 
@@ -37,7 +37,7 @@ public class GetColorPlaces {
         }
         randomIndexes.add(f);
         // get color
-        int cInt = random.nextInt(col.size() - 1);
+        int cInt = random.nextInt(col.size());
         String c = col.get(cInt);
 
         Field field = new Field(f, c);
