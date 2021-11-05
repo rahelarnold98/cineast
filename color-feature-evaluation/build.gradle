@@ -37,12 +37,12 @@ task(runThumbnailsTransparent, dependsOn: 'classes', type: JavaExec) {
 }
 
 task(runRobot, dependsOn: 'classes', type: JavaExec) {
-    main = 'evaluationQueries.sketches.WithRobot'
+    main = 'evaluationQueries.WithRobot'
     classpath = sourceSets.main.runtimeClasspath
 }
 
 task(runQueries, dependsOn: 'classes', type: JavaExec) {
-    main = 'evaluationQueries.sketches.AutomatedQueriesOfSketches'
+    main = 'evaluationQueries.AutomatedQueriesOfSketches'
     classpath = sourceSets.main.runtimeClasspath
 }
 
