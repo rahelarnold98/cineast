@@ -31,15 +31,15 @@ public class GridColor {
     ColorFeatureEvaluation colorFeatureEvaluation = new ColorFeatureEvaluation();
     ObjectMapper mapper = new ObjectMapper();
     try {
-      colorFeatureEvaluation = mapper.readValue(new File("ColorFeatureEvaluation.json"),
+      colorFeatureEvaluation = mapper.readValue(new File("../ColorFeatureEvaluation.json"),
           ColorFeatureEvaluation.class);
     } catch (IOException e) {
       e.printStackTrace();
     }
 
     path_results = "json-queries-grids";
-    String path_dict = colorFeatureEvaluation.getPathDictionary() + "/dict_grid.json";
-    String path_grid = "color-feature-evaluation/color-feature-eval/GridComplete.json";
+    String path_dict = "../" + colorFeatureEvaluation.getPathDictionary() + "/dict_grid.json";
+    String path_grid = "../color-feature-evaluation/color-feature-eval/GridComplete.json";
 
     try {
       dictQuery = mapper.readValue(new File(path_dict),
