@@ -1,6 +1,6 @@
 package grid;
 
-class Field {
+public class Field {
 
   int index;
   String color;
