@@ -1,6 +1,7 @@
-package evaluationQueries.sketches;
+package evaluationQueries;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.awt.AWTException;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -9,6 +10,8 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -18,7 +21,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class AutomatedQueriesOfSketches {
 
-  public static void main(String[] args) throws InterruptedException, IOException {
+  public static String pathResults;
+
+  public static void main(String[] args) throws InterruptedException, IOException, AWTException {
 
     ColorFeatureEvaluation colorFeatureEvaluation = new ColorFeatureEvaluation();
     ObjectMapper mapper = new ObjectMapper();
@@ -27,6 +32,18 @@ public class AutomatedQueriesOfSketches {
           ColorFeatureEvaluation.class);
     } catch (IOException e) {
       e.printStackTrace();
+    }
+
+    if (colorFeatureEvaluation.isScreenshot()) {
+      pathResults = "frontend/results/" + colorFeatureEvaluation.getPicName() + "/";
+      try {
+        File dictDir = new File(colorFeatureEvaluation.getPathDictionary());
+        if (!dictDir.exists()) {
+          dictDir.mkdir();
+        }
+      } catch (Exception e) {
+
+      }
     }
 
     ArrayList<Entry> dictionary = new ArrayList<>();
@@ -57,7 +74,7 @@ public class AutomatedQueriesOfSketches {
       for (File file : directoryListing) {
         String img = encodeFileToBase64Binary(file.getAbsolutePath());
         System.out.println(file.getAbsolutePath());
-        if (file.getName().startsWith("sketch")) {
+        if (file.getName().startsWith(colorFeatureEvaluation.getPicName())) {
 
           JavascriptExecutor js = (JavascriptExecutor) driver;
           String script =
@@ -91,6 +108,12 @@ public class AutomatedQueriesOfSketches {
 
           wait.until(ExpectedConditions.invisibilityOf(loadingBar));
           dictionary.add(new Entry(file.getName(), queryCounter));
+
+          if (colorFeatureEvaluation.isScreenshot()) {
+            File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+            FileUtils.copyFile(scrFile, new File(pathResults + file.getName()));
+          }
+
           queryCounter++;
           Thread.sleep(2000);
         }

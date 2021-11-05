@@ -1,4 +1,4 @@
-package evaluationQueries.sketches;
+package evaluationQueries;
 
 public class ColorFeatureEvaluation {
 
@@ -7,6 +7,8 @@ public class ColorFeatureEvaluation {
   String nameDictionary;
   String webdriver;
   String ip;
+  String picName;
+  boolean screenshot;
   int port;
 
   public ColorFeatureEvaluation() {
@@ -58,5 +60,21 @@ public class ColorFeatureEvaluation {
 
   public void setPathToSketches(String pathToSketches) {
     this.pathToSketches = pathToSketches;
+  }
+
+  public String getPicName() {
+    return picName;
+  }
+
+  public void setPicName(String picName) {
+    this.picName = picName;
+  }
+
+  public boolean isScreenshot() {
+    return screenshot;
+  }
+
+  public void setScreenshot(boolean screenshot) {
+    this.screenshot = screenshot;
   }
 }
