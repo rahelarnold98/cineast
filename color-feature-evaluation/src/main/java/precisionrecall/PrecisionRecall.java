@@ -1,6 +1,6 @@
 package precisionrecall;
 
-import automatedQueries.ColorFeatureEvaluation;
+import evaluationQueries.sketches.ColorFeatureEvaluation;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;

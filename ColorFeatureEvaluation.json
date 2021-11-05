@@ -1,8 +1,10 @@
 {
-  "pathToSketches": "./sketches",
+  "pathToSketches": "./grid/png",
   "pathDictionary": "./dict",
   "nameDictionary": "dict.json",
-  "webdriver": "chromedriver",
+  "picName": "grid",
+  "screenshot": true,
+  "webdriver": "/Users/rahelarnold/Downloads/chromedriver",
   "ip": "127.0.0.1",
   "port": 4567
 }
