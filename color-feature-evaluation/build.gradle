@@ -46,7 +46,14 @@ task(runQueries, dependsOn: 'classes', type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
 }
 
+task(runMathEval, dependsOn: 'classes', type: JavaExec) {
+    main = 'precisionrecall.GridColor'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+
 shadowJar {
+    zip64 = true
     mergeServiceFiles()
 }
 
