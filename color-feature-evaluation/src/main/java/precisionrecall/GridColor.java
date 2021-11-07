@@ -119,7 +119,13 @@ public class GridColor {
       String video = segment.segment_id.substring(0, until);
       System.out.println(video);
       String file = "/tank/thumbnails/" + video + "/" + segment.segment_id + ".png";
-      BufferedImage thumb = ImageIO.read(new File(file));
+      BufferedImage thumb;
+      try {
+        thumb = ImageIO.read(new File(file));
+      } catch (IOException ioException){
+        continue;
+      }
+
       int h = thumb.getHeight();
       int w = thumb.getWidth();
       int h_p = h / size;
