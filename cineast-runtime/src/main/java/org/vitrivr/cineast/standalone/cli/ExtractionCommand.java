@@ -110,6 +110,7 @@ public class ExtractionCommand implements Runnable {
           DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
           String formattedDate = myDateObj.format(myFormatObj);
           String conf = Config.configName.substring(0, Config.configName.length()-5);
+          conf.replace("/", "_");
           mapper.writeValue(new File("colors-" + conf + "-" + formattedDate +  ".json"), col);
         } catch (IOException e) {
           e.printStackTrace();
