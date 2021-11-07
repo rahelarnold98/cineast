@@ -62,12 +62,12 @@ public class GridColor {
     for (PrecisionRecall.Entry e : dictQuery) {
       Grid g = dictGrid.get(e.number);
       // Entry has String name and int number
-      System.out.println(e.name);
+      // System.out.println(e.name);
       //BufferedImage gridSketch = ImageIO.read(new File("grid/png/" + e.name));
       // set e.name to id
       int id = Integer.parseInt(e.name.substring(5, e.name.length() - 4));
       int gridSize = getGridSize(id);
-      System.out.println(gridSize);
+      // System.out.println(gridSize);
       QueryInfo queryInfo = new QueryInfo();
       int idName = id - 1;
       try {
@@ -117,7 +117,7 @@ public class GridColor {
     for (Segment segment : queryInfo.getSegments()) {
       int until = segment.segment_id.indexOf("_", segment.segment_id.indexOf("_") + 1);
       String video = segment.segment_id.substring(0, until);
-      System.out.println(video);
+      // System.out.println(video);
       String file = "/tank/thumbnails/" + video + "/" + segment.segment_id + ".png";
       BufferedImage thumb;
       try {
@@ -172,7 +172,7 @@ public class GridColor {
 
   private static int checkColorInBounds(Color grid, Color thumbnail) {
     double deltaE = DeltaE.calculateDeltaE(grid, thumbnail);
-    if (deltaE < 3) {
+    if (deltaE < 44.4) {
       return 1;
     }
     return 0;
