@@ -131,10 +131,13 @@ public class GridColor {
         int i = f.getIndex();
         Color col = GetColors.hexRgbConv(colorString);
 
-        int startX = w_p * i;
-        int startY = h_p * i;
-        int endX = w_p * (i + 1);
-        int endY = h_p * (i + 1);
+        int xCoord = xCoord(i, size);
+        int yCoord = yCoord(i, size);
+
+        int startX = w_p * xCoord;
+        int startY = h_p * yCoord;
+        int endX = w_p * (xCoord + 1);
+        int endY = h_p * (yCoord + 1);
 
         boolean contain = checkField(startX, startY, endX, endY, col, thumb);
 
@@ -174,6 +177,92 @@ public class GridColor {
       return 3;
     }
     return 4;
+  }
+
+  private static int xCoord(int field, int grid) {
+    if (grid == 3) {
+      switch (field) {
+        case 0:
+        case 3:
+        case 6:
+          return 0;
+        case 1:
+        case 4:
+        case 7:
+          return 1;
+        case 2:
+        case 5:
+        case 8:
+          return 2;
+      }
+    } else if (grid == 4) {
+      switch (field) {
+        case 0:
+        case 4:
+        case 8:
+        case 12:
+          return 0;
+        case 1:
+        case 5:
+        case 9:
+        case 13:
+          return 1;
+        case 2:
+        case 6:
+        case 10:
+        case 14:
+          return 2;
+        case 3:
+        case 7:
+        case 11:
+        case 15:
+          return 3;
+      }
+    }
+    return 0;
+  }
+
+  private static int yCoord(int field, int grid) {
+    if (grid == 3) {
+      switch (field) {
+        case 0:
+        case 1:
+        case 2:
+          return 0;
+        case 3:
+        case 4:
+        case 5:
+          return 1;
+        case 6:
+        case 7:
+        case 8:
+          return 2;
+      }
+    } else if (grid == 4) {
+      switch (field) {
+        case 0:
+        case 1:
+        case 2:
+        case 3:
+          return 0;
+        case 4:
+        case 5:
+        case 6:
+        case 7:
+          return 1;
+        case 8:
+        case 9:
+        case 10:
+        case 11:
+          return 2;
+        case 12:
+        case 13:
+        case 14:
+        case 15:
+          return 3;
+      }
+    }
+    return 0;
   }
 
 }
