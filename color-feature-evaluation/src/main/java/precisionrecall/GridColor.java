@@ -37,7 +37,7 @@ public class GridColor {
       e.printStackTrace();
     }
 
-    path_results = "json-queries-grids";
+    path_results = "../json-queries-grids";
     String path_dict = "../" + colorFeatureEvaluation.getPathDictionary() + "/dict_grid.json";
     String path_grid = "../color-feature-evaluation/color-feature-eval/GridComplete.json";
 
@@ -71,7 +71,7 @@ public class GridColor {
       QueryInfo queryInfo = new QueryInfo();
       int idName = id - 1;
       try {
-        queryInfo = mapper.readValue(new File("json-queries-grids/query-" + idName + ".json"),
+        queryInfo = mapper.readValue(new File("../json-queries-grids/query-" + idName + ".json"),
             QueryInfo.class);
       } catch (IOException exception) {
         exception.printStackTrace();
@@ -118,7 +118,7 @@ public class GridColor {
       int until = segment.segment_id.indexOf("_", segment.segment_id.indexOf("_") + 1);
       String video = segment.segment_id.substring(0, until);
       System.out.println(video);
-      String file = "/tank/" + video + "/" + segment.segment_id + ".png";
+      String file = "/tank/thumbnails/" + video + "/" + segment.segment_id + ".png";
       BufferedImage thumb = ImageIO.read(new File(file));
       int h = thumb.getHeight();
       int w = thumb.getWidth();
@@ -153,15 +153,12 @@ public class GridColor {
       BufferedImage b) {
     int countColor = 0;
     for (int i = startX; i < endX; i++) {
-      for (int j = startY; i < endY; j++) {
+      for (int j = startY; j < endY; j++) {
         Color img = new Color(b.getRGB(i, j));
         countColor = countColor + checkColorInBounds(org, img);
       }
     }
-    if (countColor > 9) {
-      return true;
-    }
-    return false;
+    return countColor > 9;
   }
 
   private static int checkColorInBounds(Color grid, Color thumbnail) {
