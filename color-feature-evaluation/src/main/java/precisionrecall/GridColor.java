@@ -25,6 +25,9 @@ public class GridColor {
   private static ArrayList<PrecisionRecall.Entry> dictQuery = new ArrayList<>();
   private static ArrayList<Grid> dictGrid = new ArrayList<>();
 
+  private static int falsePos = 0;
+  private static int falseNeg = 0;
+
 
   public static void main(String[] args) throws IOException {
 
@@ -80,6 +83,15 @@ public class GridColor {
     }
 
     System.out.println(correct);
+
+    // Precision, recall computation
+
+    double p = correct / (correct + falsePos);
+    // TODO go through all thumbnails to compute falseNeg!!!
+    double r = correct / (correct + falseNeg);
+
+    System.out.println("Precision: " + p);
+    System.out.println("Recall: " + r);
   }
 
   /*private static void getTopSegments(Grid grid, int size, QueryInfo queryInfo)
@@ -153,6 +165,8 @@ public class GridColor {
       }
       if (containing == grid.getGrid().size()) {
         correctCliassified++;
+      } else {
+        falsePos++;
       }
     }
     return correctCliassified;
