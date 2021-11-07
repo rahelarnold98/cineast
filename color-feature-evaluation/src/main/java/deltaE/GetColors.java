@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import org.vitrivr.cineast.core.color.ColorConverter;
 import org.vitrivr.cineast.core.color.LabContainer;
@@ -16,6 +18,9 @@ public class GetColors {
     List<Color> colRgb = new ArrayList<>();
     List<LabContainer> colLab = new ArrayList<>();
     List<DeltaE> color = new ArrayList<>();
+    List<Double> values = new ArrayList<>();
+
+    double deltaE = 0;
 
     col = importColors();
     for (String c : col) {
@@ -27,16 +32,30 @@ public class GetColors {
     }
 
     for (LabContainer l1 : colLab) {
+      double[] localDeltaE = new double[colLab.size() - 1];
+      int i = 0;
       for (LabContainer l2 : colLab) {
         if (!l1.equals(l2)) {
-          color.add(new DeltaE(l1, l2));
+          DeltaE d = new DeltaE(l1, l2);
+          color.add(d);
+          localDeltaE[i] = d.dE;
+          i++;
         }
+      }
+      Arrays.sort(localDeltaE);
+      if (deltaE < localDeltaE[0]) {
+        deltaE = localDeltaE[0];
       }
     }
 
     for (DeltaE d : color) {
-      d.print();
+      //d.print();
+      values.add(d.dE);
     }
+
+    System.out.println("Complete maximal delta E: " + Collections.max(values));
+
+    System.out.println("Maximal delta E of a color to another: " + deltaE);
 
   }
 
