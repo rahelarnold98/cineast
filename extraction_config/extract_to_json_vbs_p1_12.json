@@ -29,7 +29,13 @@
 		{"name": "SubDivMotionHistogram3"},
 		{"name": "SubDivMotionHistogram5"},
 		{"name": "SubDivMotionHistogramBackground3"},
-		{"name": "SubDivMotionHistogramBackground5"}
+		{"name": "SubDivMotionHistogramBackground5"},
+		{"name": "AudioFingerprint"},
+		{"name": "HOGMirflickr25K512"},
+		{"name": "SURFMirflickr25K512"},
+		{"name": "SegmentTags"},
+		{"name": "AudioTranscriptionSearch"},
+		{"name": "VisualTextCoEmbedding"}
 	],
 	"exporters":[
 		{
