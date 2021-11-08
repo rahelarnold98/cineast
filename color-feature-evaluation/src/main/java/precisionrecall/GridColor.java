@@ -86,7 +86,9 @@ public class GridColor {
 
     // Precision, recall computation
 
-    double p = correct / (correct + falsePos);
+    //double p = correct / (correct + falsePos);
+    double p = (float) correct / (correct + falsePos);
+
     // TODO go through all thumbnails to compute falseNeg!!!
     double r = correct / (correct + falseNeg);
 
