@@ -92,38 +92,12 @@ public class GridColor {
     // TODO go through all thumbnails to compute falseNeg!!!
     double r = correct / (correct + falseNeg);
 
-    System.out.println("Precision: " + p);
-    System.out.println("Recall: " + r);
-  }
+    System.out.println("Calculation on occurring pixels : " + p);
 
-  /*private static void getTopSegments(Grid grid, int size, QueryInfo queryInfo)
-      throws IOException {
-    for (Field f : grid.getGrid()) {
-      String colorString = f.getColor();
-      int i = f.getIndex();
-      Color col = GetColors.hexRgbConv(colorString);
-      int containing = 0;
-      for (Segment segment : queryInfo.getSegments()) {
-        int until = segment.segment_id.indexOf("_", segment.segment_id.indexOf("_") + 1);
-        String video = segment.segment_id.substring(0, until);
-        System.out.println(video);
-        String file = "/tank/" + video + "/" + segment.segment_id + ".png";
-        BufferedImage thumb = ImageIO.read(new File(file));
-        int h = thumb.getHeight();
-        int w = thumb.getWidth();
-        int h_p = h / size;
-        int w_p = w / size;
-        int startX = w_p * i;
-        int startY = h_p * i;
-        int endX = w_p * (i + 1);
-        int endY = h_p * (i + 1);
-        boolean contain = checkField(startX, startY, endX, endY, col, thumb);
-        if (contain) {
-          containing++;
-        }
-      }
-    }
-  }*/
+    System.out.println("Precision : " + p);
+    System.out.println("Recall: " + r);
+
+  }
 
   private static int getTopSegments(Grid grid, int size, QueryInfo queryInfo)
       throws IOException {
@@ -136,7 +110,7 @@ public class GridColor {
       BufferedImage thumb;
       try {
         thumb = ImageIO.read(new File(file));
-      } catch (IOException ioException){
+      } catch (IOException ioException) {
         continue;
       }
 
@@ -177,13 +151,17 @@ public class GridColor {
   private static boolean checkField(int startX, int startY, int endX, int endY, Color org,
       BufferedImage b) {
     int countColor = 0;
+    int pixel = 0;
     for (int i = startX; i < endX; i++) {
       for (int j = startY; j < endY; j++) {
         Color img = new Color(b.getRGB(i, j));
         countColor = countColor + checkColorInBounds(org, img);
+        pixel++;
       }
     }
-    return countColor > 9;
+    // ration that needed to be colored = 1/4
+    int min = pixel / 4;
+    return countColor > min;
   }
 
   private static int checkColorInBounds(Color grid, Color thumbnail) {
