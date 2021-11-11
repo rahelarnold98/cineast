@@ -102,14 +102,14 @@ public class GridColor {
     double rPixelwise = correctPixelwise / (correctPixelwise + falseNegPixelwise);
     double rAverage = correctAverage / (correctAverage + falseNegAverage);
 
-    System.out.println("Calculation on occurring pixels : " + pPixelwise);
+    System.out.println("Calculation on occurring pixels : ");
 
     System.out.println("Precision : " + pPixelwise);
     System.out.println("Recall: " + rPixelwise);
 
     System.out.println("-------------------------------------------");
 
-    System.out.println("Calculation on average color : " + pPixelwise);
+    System.out.println("Calculation on average color : ");
 
     System.out.println("Precision : " + pAverage);
     System.out.println("Recall: " + rAverage);
