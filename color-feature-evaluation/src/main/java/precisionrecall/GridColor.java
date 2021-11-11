@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
+import org.vitrivr.cineast.core.util.ColorUtils;
 
 public class GridColor {
 
@@ -25,8 +26,11 @@ public class GridColor {
   private static ArrayList<PrecisionRecall.Entry> dictQuery = new ArrayList<>();
   private static ArrayList<Grid> dictGrid = new ArrayList<>();
 
-  private static int falsePos = 0;
-  private static int falseNeg = 0;
+  private static int falsePosPixelwise = 0;
+  private static int falseNegPixelwise = 0;
+
+  private static int falsePosAverage = 0;
+  private static int falseNegAverage = 0;
 
 
   public static void main(String[] args) throws IOException {
@@ -60,7 +64,8 @@ public class GridColor {
       e.printStackTrace();
     }
 
-    int correct = 0;
+    int correctPixelwise = 0;
+    int correctAverage = 0;
 
     for (PrecisionRecall.Entry e : dictQuery) {
       Grid g = dictGrid.get(e.number);
@@ -79,29 +84,43 @@ public class GridColor {
       } catch (IOException exception) {
         exception.printStackTrace();
       }
-      correct += getTopSegments(g, gridSize, queryInfo);
+      int[] res = getTopSegments(g, gridSize, queryInfo);
+      correctPixelwise += res[0];
+      correctAverage += res[1];
     }
 
-    System.out.println(correct);
+    System.out.println(correctPixelwise);
+    System.out.println(correctAverage);
 
     // Precision, recall computation
 
     //double p = correct / (correct + falsePos);
-    double p = (float) correct / (correct + falsePos);
+    double pPixelwise = (float) correctPixelwise / (correctPixelwise + falsePosPixelwise);
+    double pAverage = (float) correctAverage / (correctAverage + falsePosAverage);
 
     // TODO go through all thumbnails to compute falseNeg!!!
-    double r = correct / (correct + falseNeg);
+    double rPixelwise = correctPixelwise / (correctPixelwise + falseNegPixelwise);
+    double rAverage = correctAverage / (correctAverage + falseNegAverage);
 
-    System.out.println("Calculation on occurring pixels : " + p);
+    System.out.println("Calculation on occurring pixels : " + pPixelwise);
 
-    System.out.println("Precision : " + p);
-    System.out.println("Recall: " + r);
+    System.out.println("Precision : " + pPixelwise);
+    System.out.println("Recall: " + rPixelwise);
+
+    System.out.println("-------------------------------------------");
+
+    System.out.println("Calculation on average color : " + pPixelwise);
+
+    System.out.println("Precision : " + pAverage);
+    System.out.println("Recall: " + rAverage);
 
   }
 
-  private static int getTopSegments(Grid grid, int size, QueryInfo queryInfo)
+  private static int[] getTopSegments(Grid grid, int size, QueryInfo queryInfo)
       throws IOException {
-    int correctCliassified = 0;
+    int correctCliassifiedPixelwise = 0;
+    int correctCliassifiedAverage = 0;
+    int[] correct = new int[2];
     for (Segment segment : queryInfo.getSegments()) {
       int until = segment.segment_id.indexOf("_", segment.segment_id.indexOf("_") + 1);
       String video = segment.segment_id.substring(0, until);
@@ -119,7 +138,8 @@ public class GridColor {
       int h_p = h / size;
       int w_p = w / size;
 
-      int containing = 0;
+      int containingPixelwise = 0;
+      int containingAverage = 0;
       for (Field f : grid.getGrid()) {
         String colorString = f.getColor();
         int i = f.getIndex();
@@ -133,22 +153,34 @@ public class GridColor {
         int endX = w_p * (xCoord + 1);
         int endY = h_p * (yCoord + 1);
 
-        boolean contain = checkField(startX, startY, endX, endY, col, thumb);
-
-        if (contain) {
-          containing++;
+        boolean containPixelwise = checkFieldPixelwise(startX, startY, endX, endY, col, thumb);
+        boolean containAverage = checkFieldAverage(startX, startY, endX, endY, col, thumb);
+        if (containPixelwise) {
+          containingPixelwise++;
+        }
+        if (containAverage) {
+          containingAverage++;
         }
       }
-      if (containing == grid.getGrid().size()) {
-        correctCliassified++;
+      if (containingPixelwise == grid.getGrid().size()) {
+        correctCliassifiedPixelwise++;
       } else {
-        falsePos++;
+        falsePosPixelwise++;
       }
+
+      if (containingAverage == grid.getGrid().size()) {
+        correctCliassifiedAverage++;
+      } else {
+        falsePosAverage++;
+      }
+
     }
-    return correctCliassified;
+    correct[0] = correctCliassifiedPixelwise;
+    correct[1] = correctCliassifiedAverage;
+    return correct;
   }
 
-  private static boolean checkField(int startX, int startY, int endX, int endY, Color org,
+  private static boolean checkFieldPixelwise(int startX, int startY, int endX, int endY, Color org,
       BufferedImage b) {
     int countColor = 0;
     int pixel = 0;
@@ -162,6 +194,25 @@ public class GridColor {
     // ration that needed to be colored = 1/4
     int min = pixel / 4;
     return countColor > min;
+  }
+
+  private static boolean checkFieldAverage(int startX, int startY, int endX, int endY, Color org,
+      BufferedImage b) {
+    int pixel = 0;
+    int size = (endX - startX) * (endY - startY);
+    int[] colors = new int[size];
+    for (int i = startX; i < endX; i++) {
+      for (int j = startY; j < endY; j++) {
+        colors[pixel] = (b.getRGB(i, j));
+        pixel++;
+      }
+    }
+
+    int avg = ColorUtils.getAvg(colors);
+    Color average = new Color(avg);
+    int res = checkColorInBounds(org, average);
+
+    return res == 1;
   }
 
   private static int checkColorInBounds(Color grid, Color thumbnail) {
