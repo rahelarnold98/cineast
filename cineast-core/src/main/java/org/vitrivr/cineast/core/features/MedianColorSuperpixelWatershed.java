@@ -1,7 +1,6 @@
 package org.vitrivr.cineast.core.features;
 
 import boofcv.abst.segmentation.ImageSuperpixels;
-import boofcv.factory.segmentation.ConfigFh04;
 import boofcv.factory.segmentation.FactoryImageSegmentation;
 import boofcv.io.image.ConvertBufferedImage;
 import boofcv.struct.image.GrayF32;
@@ -19,7 +18,6 @@ import org.vitrivr.cineast.core.config.CacheConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.ReadableFloatVector;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
-import org.vitrivr.cineast.core.data.providers.MedianImgProvider;
 import org.vitrivr.cineast.core.data.raw.CachedDataFactory;
 import org.vitrivr.cineast.core.data.raw.images.MultiImage;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
@@ -29,6 +27,9 @@ import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 public class MedianColorSuperpixelWatershed extends AbstractFeatureModule {
 
   private static final Logger LOGGER = LogManager.getLogger();
+
+  private final CacheConfig cacheConfig = new CacheConfig("AUTOMATIC", ".");
+  private final CachedDataFactory factory = new CachedDataFactory(cacheConfig);
 
   public MedianColorSuperpixelWatershed() {
     super("features_MedianColorSuperpixelWatershed", 196f / 4f, 3);
@@ -71,9 +72,7 @@ public class MedianColorSuperpixelWatershed extends AbstractFeatureModule {
       return;
     }
     if (!phandler.idExists(shot.getId())) {
-      CacheConfig cacheConfig = new CacheConfig("AUTOMATIC", ".");
-      CachedDataFactory factory = new CachedDataFactory(cacheConfig);
-      BufferedImage superpixel = applySuperpixel(shot, factory);
+      BufferedImage superpixel = applySuperpixel(shot);
 
       MultiImage multiImage = factory.newMultiImage(superpixel);
       LabContainer median = getMedian(multiImage);
@@ -83,17 +82,14 @@ public class MedianColorSuperpixelWatershed extends AbstractFeatureModule {
 
   @Override
   public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
-    CacheConfig cacheConfig = new CacheConfig("AUTOMATIC", ".");
-    CachedDataFactory factory = new CachedDataFactory(cacheConfig);
-    BufferedImage superpixel = applySuperpixel(sc, factory);
+    BufferedImage superpixel = applySuperpixel(sc);
 
     MultiImage multiImage = factory.newMultiImage(superpixel);
     LabContainer query = getMedian(multiImage);
     return getSimilar(ReadableFloatVector.toArray(query), qc);
   }
 
-  private BufferedImage applySuperpixel(SegmentContainer segmentContainer,
-      CachedDataFactory factory) {
+  private BufferedImage applySuperpixel(SegmentContainer segmentContainer) {
 
     BufferedImage image = segmentContainer.getMedianImg().getBufferedImage();
     image = ConvertBufferedImage.stripAlphaChannel(image);

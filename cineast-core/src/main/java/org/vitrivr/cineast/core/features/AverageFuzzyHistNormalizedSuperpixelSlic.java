@@ -1,7 +1,6 @@
 package org.vitrivr.cineast.core.features;
 
 import boofcv.abst.segmentation.ImageSuperpixels;
-import boofcv.factory.segmentation.ConfigFh04;
 import boofcv.factory.segmentation.ConfigSlic;
 import boofcv.factory.segmentation.FactoryImageSegmentation;
 import boofcv.io.image.ConvertBufferedImage;
@@ -31,6 +30,9 @@ public class AverageFuzzyHistNormalizedSuperpixelSlic extends AbstractFeatureMod
 
   private static final Logger LOGGER = LogManager.getLogger();
 
+  private final CacheConfig cacheConfig = new CacheConfig("AUTOMATIC", ".");
+  private final CachedDataFactory factory = new CachedDataFactory(cacheConfig);
+
   public AverageFuzzyHistNormalizedSuperpixelSlic() {
     super("features_AverageFuzzyHistNormalizedSuperpixelSlic", 2f / 4f, 15);
   }
@@ -41,24 +43,22 @@ public class AverageFuzzyHistNormalizedSuperpixelSlic extends AbstractFeatureMod
       return;
     }
     if (!phandler.idExists(shot.getId())) {
-      CacheConfig cacheConfig = new CacheConfig("AUTOMATIC", ".");
-      CachedDataFactory factory = new CachedDataFactory(cacheConfig);
-      BufferedImage superpixel = applySuperpixel(shot, factory);
+      BufferedImage superpixel = applySuperpixel(shot);
 
       MultiImage multiImage = factory.newMultiImage(superpixel);
-      FuzzyColorHistogram fch = FuzzyColorHistogramCalculator.getHistogramNormalized(ImageHistogramEqualizer.getEqualized(multiImage).getBufferedImage());
+      FuzzyColorHistogram fch = FuzzyColorHistogramCalculator.getHistogramNormalized(
+          ImageHistogramEqualizer.getEqualized(multiImage).getBufferedImage());
       persist(shot.getId(), fch);
     }
   }
 
   @Override
   public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
-    CacheConfig cacheConfig = new CacheConfig("AUTOMATIC", ".");
-    CachedDataFactory factory = new CachedDataFactory(cacheConfig);
-    BufferedImage superpixel = applySuperpixel(sc, factory);
+    BufferedImage superpixel = applySuperpixel(sc);
 
     MultiImage multiImage = factory.newMultiImage(superpixel);
-    FuzzyColorHistogram query = FuzzyColorHistogramCalculator.getHistogramNormalized((ImageHistogramEqualizer.getEqualized(multiImage)).getBufferedImage());
+    FuzzyColorHistogram query = FuzzyColorHistogramCalculator.getHistogramNormalized(
+        (ImageHistogramEqualizer.getEqualized(multiImage)).getBufferedImage());
     return getSimilar(ReadableFloatVector.toArray(query), qc);
   }
 
@@ -67,8 +67,7 @@ public class AverageFuzzyHistNormalizedSuperpixelSlic extends AbstractFeatureMod
     return QueryConfig.clone(qc).setDistanceIfEmpty(Distance.chisquared);
   }
 
-  private BufferedImage applySuperpixel(SegmentContainer segmentContainer,
-      CachedDataFactory factory) {
+  private BufferedImage applySuperpixel(SegmentContainer segmentContainer) {
 
     BufferedImage image = segmentContainer.getAvgImg().getBufferedImage();
     image = ConvertBufferedImage.stripAlphaChannel(image);

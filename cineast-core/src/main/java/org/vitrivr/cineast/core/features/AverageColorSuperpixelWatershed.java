@@ -2,7 +2,6 @@ package org.vitrivr.cineast.core.features;
 
 
 import boofcv.abst.segmentation.ImageSuperpixels;
-import boofcv.factory.segmentation.ConfigFh04;
 import boofcv.factory.segmentation.FactoryImageSegmentation;
 import boofcv.io.image.ConvertBufferedImage;
 import boofcv.struct.image.GrayF32;
@@ -30,6 +29,9 @@ public class AverageColorSuperpixelWatershed extends AbstractFeatureModule {
 
   private static final Logger LOGGER = LogManager.getLogger();
 
+  private final CacheConfig cacheConfig = new CacheConfig("AUTOMATIC", ".");
+  private final CachedDataFactory factory = new CachedDataFactory(cacheConfig);
+
   public AverageColorSuperpixelWatershed() {
     super("features_AverageColorSuperpixelWatershed", 196f / 4f, 3);
   }
@@ -45,9 +47,7 @@ public class AverageColorSuperpixelWatershed extends AbstractFeatureModule {
       return;
     }
     if (!phandler.idExists(shot.getId())) {
-      CacheConfig cacheConfig = new CacheConfig("AUTOMATIC", ".");
-      CachedDataFactory factory = new CachedDataFactory(cacheConfig);
-      BufferedImage superpixel = applySuperpixel(shot, factory);
+      BufferedImage superpixel = applySuperpixel(shot);
 
       MultiImage multiImage = factory.newMultiImage(superpixel);
       ReadableLabContainer avg = getAvg(multiImage);
@@ -58,17 +58,14 @@ public class AverageColorSuperpixelWatershed extends AbstractFeatureModule {
 
   @Override
   public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
-    CacheConfig cacheConfig = new CacheConfig("AUTOMATIC", ".");
-    CachedDataFactory factory = new CachedDataFactory(cacheConfig);
-    BufferedImage superpixel = applySuperpixel(sc, factory);
+    BufferedImage superpixel = applySuperpixel(sc);
 
     MultiImage multiImage = factory.newMultiImage(superpixel);
     ReadableLabContainer query = getAvg(multiImage);
     return getSimilar(ReadableFloatVector.toArray(query), qc);
   }
 
-  private BufferedImage applySuperpixel(SegmentContainer segmentContainer,
-      CachedDataFactory factory) {
+  private BufferedImage applySuperpixel(SegmentContainer segmentContainer) {
 
     BufferedImage image = segmentContainer.getAvgImg().getBufferedImage();
     image = ConvertBufferedImage.stripAlphaChannel(image);

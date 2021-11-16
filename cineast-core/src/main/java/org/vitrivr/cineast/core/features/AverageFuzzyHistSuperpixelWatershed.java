@@ -1,7 +1,6 @@
 package org.vitrivr.cineast.core.features;
 
 import boofcv.abst.segmentation.ImageSuperpixels;
-import boofcv.factory.segmentation.ConfigFh04;
 import boofcv.factory.segmentation.FactoryImageSegmentation;
 import boofcv.io.image.ConvertBufferedImage;
 import boofcv.struct.image.GrayF32;
@@ -29,6 +28,9 @@ public class AverageFuzzyHistSuperpixelWatershed extends AbstractFeatureModule {
 
   private static final Logger LOGGER = LogManager.getLogger();
 
+  private final CacheConfig cacheConfig = new CacheConfig("AUTOMATIC", ".");
+  private final CachedDataFactory factory = new CachedDataFactory(cacheConfig);
+
   public AverageFuzzyHistSuperpixelWatershed() {
     super("features_AverageFuzzyHistSuperpixelWatershed", 2f / 4f, 15);
   }
@@ -39,9 +41,7 @@ public class AverageFuzzyHistSuperpixelWatershed extends AbstractFeatureModule {
       return;
     }
     if (!phandler.idExists(shot.getId())) {
-      CacheConfig cacheConfig = new CacheConfig("AUTOMATIC", ".");
-      CachedDataFactory factory = new CachedDataFactory(cacheConfig);
-      BufferedImage superpixel = applySuperpixel(shot, factory);
+      BufferedImage superpixel = applySuperpixel(shot);
 
       FuzzyColorHistogram fch = FuzzyColorHistogramCalculator
           .getHistogramNormalized(superpixel);
@@ -51,9 +51,7 @@ public class AverageFuzzyHistSuperpixelWatershed extends AbstractFeatureModule {
 
   @Override
   public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
-    CacheConfig cacheConfig = new CacheConfig("AUTOMATIC", ".");
-    CachedDataFactory factory = new CachedDataFactory(cacheConfig);
-    BufferedImage superpixel = applySuperpixel(sc, factory);
+    BufferedImage superpixel = applySuperpixel(sc);
 
     FuzzyColorHistogram query = FuzzyColorHistogramCalculator.getHistogramNormalized(superpixel);
     return getSimilar(ReadableFloatVector.toArray(query), qc);
@@ -64,8 +62,7 @@ public class AverageFuzzyHistSuperpixelWatershed extends AbstractFeatureModule {
     return QueryConfig.clone(qc).setDistanceIfEmpty(Distance.chisquared);
   }
 
-  private BufferedImage applySuperpixel(SegmentContainer segmentContainer,
-      CachedDataFactory factory) {
+  private BufferedImage applySuperpixel(SegmentContainer segmentContainer) {
 
     BufferedImage image = segmentContainer.getAvgImg().getBufferedImage();
     image = ConvertBufferedImage.stripAlphaChannel(image);
