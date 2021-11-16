@@ -188,7 +188,7 @@
     }
   },
   "extractor": {
-    "threadPoolSize": 4,
+    "threadPoolSize": 16,
     "outputLocation": "out"
   },
   "api": {
