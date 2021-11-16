@@ -25,12 +25,12 @@ import org.vitrivr.cineast.core.extraction.segmenter.FuzzyColorHistogram;
 import org.vitrivr.cineast.core.extraction.segmenter.FuzzyColorHistogramCalculator;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 
-public class MedianFuzzyHistSuperpixel extends AbstractFeatureModule {
+public class MedianFuzzyHistSuperpixelFh04 extends AbstractFeatureModule {
 
   private static final Logger LOGGER = LogManager.getLogger();
 
-  public MedianFuzzyHistSuperpixel() {
-    super("features_MedianFuzzyHist", 2f / 4f, 15);
+  public MedianFuzzyHistSuperpixelFh04() {
+    super("features_MedianFuzzyHistSuperpixelFh04", 2f / 4f, 15);
   }
 
   @Override
