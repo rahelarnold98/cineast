@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.features;
 
 import boofcv.abst.segmentation.ImageSuperpixels;
 import boofcv.factory.segmentation.ConfigFh04;
+import boofcv.factory.segmentation.ConfigSlic;
 import boofcv.factory.segmentation.FactoryImageSegmentation;
 import boofcv.io.image.ConvertBufferedImage;
 import boofcv.struct.image.GrayF32;
@@ -25,12 +26,12 @@ import org.vitrivr.cineast.core.extraction.segmenter.FuzzyColorHistogram;
 import org.vitrivr.cineast.core.extraction.segmenter.FuzzyColorHistogramCalculator;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 
-public class AverageFuzzyHistSuperpixel extends AbstractFeatureModule {
+public class AverageFuzzyHistSuperpixelSlic extends AbstractFeatureModule {
 
   private static final Logger LOGGER = LogManager.getLogger();
 
-  public AverageFuzzyHistSuperpixel() {
-    super("features_AverageFuzzyHist", 2f / 4f, 15);
+  public AverageFuzzyHistSuperpixelSlic() {
+    super("features_AverageFuzzyHistSuperpixelSlic", 2f / 4f, 15);
   }
 
   @Override
@@ -70,7 +71,7 @@ public class AverageFuzzyHistSuperpixel extends AbstractFeatureModule {
     BufferedImage image = segmentContainer.getAvgImg().getBufferedImage();
     image = ConvertBufferedImage.stripAlphaChannel(image);
     ImageType<Planar<GrayF32>> imageType = ImageType.pl(3, GrayF32.class);
-    ImageSuperpixels alg = FactoryImageSegmentation.fh04(new ConfigFh04(100, 30), imageType);
+    ImageSuperpixels alg = FactoryImageSegmentation.slic(new ConfigSlic(400), imageType);
     ImageBase color = imageType.createImage(image.getWidth(), image.getHeight());
     ConvertBufferedImage.convertFrom(image, color, true);
     BufferedImage superpixel = Superpixel.performSegmentation(alg, color);
