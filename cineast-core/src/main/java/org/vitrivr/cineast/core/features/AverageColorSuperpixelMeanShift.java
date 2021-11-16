@@ -26,12 +26,12 @@ import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 import org.vitrivr.cineast.core.util.ColorUtils;
 
-public class AverageColorSuperpixel extends AbstractFeatureModule {
+public class AverageColorSuperpixelMeanShift extends AbstractFeatureModule {
 
   private static final Logger LOGGER = LogManager.getLogger();
 
-  public AverageColorSuperpixel() {
-    super("features_AverageColor", 196f / 4f, 3);
+  public AverageColorSuperpixelMeanShift() {
+    super("features_AverageColorSuperpixelMeanShift", 196f / 4f, 3);
   }
 
   public static ReadableLabContainer getAvg(MultiImage img) {
@@ -73,7 +73,7 @@ public class AverageColorSuperpixel extends AbstractFeatureModule {
     BufferedImage image = segmentContainer.getAvgImg().getBufferedImage();
     image = ConvertBufferedImage.stripAlphaChannel(image);
     ImageType<Planar<GrayF32>> imageType = ImageType.pl(3, GrayF32.class);
-    ImageSuperpixels alg = FactoryImageSegmentation.fh04(new ConfigFh04(100, 30), imageType);
+    ImageSuperpixels alg = FactoryImageSegmentation.meanShift(null, imageType);
     ImageBase color = imageType.createImage(image.getWidth(), image.getHeight());
     ConvertBufferedImage.convertFrom(image, color, true);
     BufferedImage superpixel = Superpixel.performSegmentation(alg, color);
