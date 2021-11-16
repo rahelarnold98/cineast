@@ -26,12 +26,12 @@ import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 
-public class MedianColorSuperpixel extends AbstractFeatureModule {
+public class MedianColorSuperpixelFh04 extends AbstractFeatureModule {
 
   private static final Logger LOGGER = LogManager.getLogger();
 
-  public MedianColorSuperpixel() {
-    super("features_MedianColor", 196f / 4f, 3);
+  public MedianColorSuperpixelFh04() {
+    super("features_MedianColorSuperpixelFh04", 196f / 4f, 3);
   }
 
   public static LabContainer getMedian(MultiImage img) {
