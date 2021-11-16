@@ -26,12 +26,12 @@ import org.vitrivr.cineast.core.extraction.segmenter.FuzzyColorHistogramCalculat
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 import org.vitrivr.cineast.core.util.ImageHistogramEqualizer;
 
-public class AverageFuzzyHistNormalizedSuperpixel extends AbstractFeatureModule {
+public class AverageFuzzyHistNormalizedSuperpixelMeanShift extends AbstractFeatureModule {
 
   private static final Logger LOGGER = LogManager.getLogger();
 
-  public AverageFuzzyHistNormalizedSuperpixel() {
-    super("features_AverageFuzzyHistNormalized", 2f / 4f, 15);
+  public AverageFuzzyHistNormalizedSuperpixelMeanShift() {
+    super("features_AverageFuzzyHistNormalizedSuperpixelMeanShift", 2f / 4f, 15);
   }
 
   @Override
@@ -72,7 +72,7 @@ public class AverageFuzzyHistNormalizedSuperpixel extends AbstractFeatureModule 
     BufferedImage image = segmentContainer.getAvgImg().getBufferedImage();
     image = ConvertBufferedImage.stripAlphaChannel(image);
     ImageType<Planar<GrayF32>> imageType = ImageType.pl(3, GrayF32.class);
-    ImageSuperpixels alg = FactoryImageSegmentation.fh04(new ConfigFh04(100, 30), imageType);
+    ImageSuperpixels alg = FactoryImageSegmentation.meanShift(null, imageType);
     ImageBase color = imageType.createImage(image.getWidth(), image.getHeight());
     ConvertBufferedImage.convertFrom(image, color, true);
     BufferedImage superpixel = Superpixel.performSegmentation(alg, color);
