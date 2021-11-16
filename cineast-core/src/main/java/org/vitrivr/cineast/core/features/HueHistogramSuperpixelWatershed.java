@@ -23,10 +23,10 @@ import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
 
-public class HueHistogramSuperpixel extends AbstractFeatureModule {
+public class HueHistogramSuperpixelWatershed extends AbstractFeatureModule {
 
-  public HueHistogramSuperpixel() {
-    super("features_huehistogram", 16f, 16);
+  public HueHistogramSuperpixelWatershed() {
+    super("features_huehistogramSuperpixelWatershed", 16f, 16);
   }
 
   @Override
@@ -89,7 +89,7 @@ public class HueHistogramSuperpixel extends AbstractFeatureModule {
       CachedDataFactory factory) {
     image = ConvertBufferedImage.stripAlphaChannel(image);
     ImageType<Planar<GrayF32>> imageType = ImageType.pl(3, GrayF32.class);
-    ImageSuperpixels alg = FactoryImageSegmentation.fh04(new ConfigFh04(100, 30), imageType);
+    ImageSuperpixels alg = FactoryImageSegmentation.watershed(null, imageType);
     ImageBase color = imageType.createImage(image.getWidth(), image.getHeight());
     ConvertBufferedImage.convertFrom(image, color, true);
     BufferedImage superpixel = Superpixel.performSegmentation(alg, color);
@@ -102,7 +102,7 @@ public class HueHistogramSuperpixel extends AbstractFeatureModule {
     BufferedImage image = segmentContainer.getMostRepresentativeFrame().getImage().getBufferedImage();
     image = ConvertBufferedImage.stripAlphaChannel(image);
     ImageType<Planar<GrayF32>> imageType = ImageType.pl(3, GrayF32.class);
-    ImageSuperpixels alg = FactoryImageSegmentation.fh04(new ConfigFh04(100, 30), imageType);
+    ImageSuperpixels alg = FactoryImageSegmentation.watershed(null, imageType);
     ImageBase color = imageType.createImage(image.getWidth(), image.getHeight());
     ConvertBufferedImage.convertFrom(image, color, true);
     BufferedImage superpixel = Superpixel.performSegmentation(alg, color);
