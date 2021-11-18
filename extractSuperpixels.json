@@ -1,0 +1,80 @@
+{
+	"input":{
+		"path": "/mnt/hdd/v3c1-mini",
+		"depth": 3,
+		"skip": 0,
+		"id": {
+			"name": "FileNameObjectIdGenerator",
+			"properties": {}
+		}
+	},
+	"extractors":[
+		{"name": "ConceptMasksAde20k"},
+		{"name": "AverageColorSuperpixelFh04"},
+		{"name": "AverageColorSuperpixelMeanShift"},
+		{"name": "AverageColorSuperpixelSlic"},
+		{"name": "AverageColorSuperpixelWatershed"},
+		{"name": "MedianColorSuperpixelFh04"},
+		{"name": "MedianColorSuperpixelMeanShift"},
+		{"name": "MedianColorSuperpixelSlic"},
+		{"name": "MedianColorSuperpixelWatershed"},
+		{"name": "MedianFuzzyHistSuperpixelFh04"},
+		{"name": "MedianFuzzyHistSuperpixelMeanShift"},
+		{"name": "MedianFuzzyHistSuperpixelSlic"},
+		{"name": "MedianFuzzyHistSuperpixelWatershed"},
+		{"name": "AverageFuzzyHistSuperpixelFh04"},
+		{"name": "AverageFuzzyHistSuperpixelMeanShift"},
+		{"name": "AverageFuzzyHistSuperpixelSlic"},
+		{"name": "AverageFuzzyHistSuperpixelWatershed"},
+		{"name": "AverageFuzzyHistNormalizedSuperpixelFh04"},
+		{"name": "AverageFuzzyHistNormalizedSuperpixelMeanShift"},
+		{"name": "AverageFuzzyHistNormalizedSuperpixelSlic"},
+		{"name": "AverageFuzzyHistNormalizedSuperpixelWatershed"},
+		{"name": "HueHistogramSuperpixelFh04"},
+		{"name": "HueHistogramSuperpixelMeanShift"},
+		{"name": "HueHistogramSuperpixelSlic"},
+		{"name": "HueHistogramSuperpixelWatershed"},
+		{"name": "AverageColorGrid8SuperpixelFh04"},
+		{"name": "AverageColorGrid8SuperpixelMeanShift"},
+		{"name": "AverageColorGrid8SuperpixelSlic"},
+		{"name": "AverageColorGrid8SuperpixelWatershed"},
+		{"name": "AverageColorGrid8Reduced15SuperpixelFh04"},
+		{"name": "AverageColorGrid8Reduced15SuperpixelMeanShift"},
+		{"name": "AverageColorGrid8Reduced15SuperpixelSlic"},
+		{"name": "AverageColorGrid8Reduced15SuperpixelWatershed"},
+		{"name": "AverageColorRasterSuperpixelFh04"},
+		{"name": "AverageColorRasterSuperpixelMeanShift"},
+		{"name": "AverageColorRasterSuperpixelSlic"},
+		{"name": "AverageColorRasterSuperpixelWatershed"},
+		{"name": "CLDSuperpixelFh04"},
+		{"name": "CLDSuperpixelMeanShift"},
+		{"name": "CLDSuperpixelSlic"},
+		{"name": "CLDSuperpixelWatershed"},
+		{"name": "CLDReduced15SuperpixelFh04"},
+		{"name": "CLDReduced15SuperpixelMeanShift"},
+		{"name": "CLDReduced15SuperpixelSlic"},
+		{"name": "CLDReduced15SuperpixelWatershed"},
+		{"name": "EHD"},
+		{"name": "EdgeARP88"},
+		{"name": "EdgeGrid16"},
+		{"name": "DominantEdgeGrid16"},
+		{"name": "DominantEdgeGrid8"},
+		{"name": "SubDivMotionHistogram3"},
+		{"name": "SubDivMotionHistogram5"},
+		{"name": "SubDivMotionHistogramBackground3"},
+		{"name": "SubDivMotionHistogramBackground5"}
+	],
+	"exporters":[
+		{
+			"name": "ShotThumbnailsExporter",
+			"properties": {
+				"destination": "/mnt/hdd/thumbnailsSuperpixel/"
+			}
+		}
+	],
+	"database":{
+		"selector": "JSON",
+		"writer": "JSON",
+		"host": "/mnt/hdd/outputSuperpixel/"
+	}
+}
