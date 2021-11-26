@@ -2,14 +2,6 @@ package org.vitrivr.cineast.core.features;
 
 import static org.vitrivr.cineast.core.util.CineastConstants.GENERIC_ID_COLUMN_QUALIFIER;
 
-import boofcv.abst.segmentation.ImageSuperpixels;
-import boofcv.factory.segmentation.ConfigFh04;
-import boofcv.factory.segmentation.FactoryImageSegmentation;
-import boofcv.io.image.ConvertBufferedImage;
-import boofcv.struct.image.GrayF32;
-import boofcv.struct.image.ImageBase;
-import boofcv.struct.image.ImageType;
-import boofcv.struct.image.Planar;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -56,88 +48,176 @@ public class AverageColorRasterSuperpixelMeanShift extends AbstractFeatureModule
     super("features_AverageColorRasterSuperpixelMeanShift", 1, 1);
   }
 
-  @Override
-  public void init(PersistencyWriterSupplier supply, int batchSize) {
-    super.init(supply, batchSize);
-    this.phandler.setFieldNames(GENERIC_ID_COLUMN_QUALIFIER, "hist", "raster");
-  }
-
   protected static int get(Color c) {
     switch (c) {
-    case Black:
-      return 0;
-    case Blue:
-      return 1;
-    case Brown:
-      return 2;
-    case Cyan:
-      return 3;
-    case Green:
-      return 4;
-    case Grey:
-      return 5;
-    case Magenta:
-      return 6;
-    case Navy:
-      return 7;
-    case Orange:
-      return 8;
-    case Pink:
-      return 9;
-    case Red:
-      return 10;
-    case Teal:
-      return 11;
-    case Violet:
-      return 12;
-    case White:
-      return 13;
-    case Yellow:
-      return 14;
-    default:
-      return -1;
+      case Black:
+        return 0;
+      case Blue:
+        return 1;
+      case Brown:
+        return 2;
+      case Cyan:
+        return 3;
+      case Green:
+        return 4;
+      case Grey:
+        return 5;
+      case Magenta:
+        return 6;
+      case Navy:
+        return 7;
+      case Orange:
+        return 8;
+      case Pink:
+        return 9;
+      case Red:
+        return 10;
+      case Teal:
+        return 11;
+      case Violet:
+        return 12;
+      case White:
+        return 13;
+      case Yellow:
+        return 14;
+      default:
+        return -1;
     }
   }
 
   protected static Color get(int i) {
     switch (i) {
-    case 0:
-      return Color.Black;
-    case 1:
-      return Color.Blue;
-    case 2:
-      return Color.Brown;
-    case 3:
-      return Color.Cyan;
-    case 4:
-      return Color.Green;
-    case 5:
-      return Color.Grey;
-    case 6:
-      return Color.Magenta;
-    case 7:
-      return Color.Navy;
-    case 8:
-      return Color.Orange;
-    case 9:
-      return Color.Pink;
-    case 10:
-      return Color.Red;
-    case 11:
-      return Color.Teal;
-    case 12:
-      return Color.Violet;
-    case 13:
-      return Color.White;
-    case 14:
-      return Color.Yellow;
-    default:
-      return Color.Black;
+      case 0:
+        return Color.Black;
+      case 1:
+        return Color.Blue;
+      case 2:
+        return Color.Brown;
+      case 3:
+        return Color.Cyan;
+      case 4:
+        return Color.Green;
+      case 5:
+        return Color.Grey;
+      case 6:
+        return Color.Magenta;
+      case 7:
+        return Color.Navy;
+      case 8:
+        return Color.Orange;
+      case 9:
+        return Color.Pink;
+      case 10:
+        return Color.Red;
+      case 11:
+        return Color.Teal;
+      case 12:
+        return Color.Violet;
+      case 13:
+        return Color.White;
+      case 14:
+        return Color.Yellow;
+      default:
+        return Color.Black;
     }
   }
 
   protected static Color get(float f) {
     return get(Math.round(f));
+  }
+
+  protected static double register(float[] query, float[] db) {
+    double best = 0;
+    if (query.length < 64 || db.length < 64) {
+      return 0;
+    }
+    for (int xoff = -4; xoff <= 4; ++xoff) {
+      for (int yoff = -4; yoff <= 4; ++yoff) {
+        double score = 0;
+        for (int x = 0; x < 8; ++x) {
+          for (int y = 0; y < 8; ++y) {
+            int x1 = x + xoff;
+            int y1 = y + yoff;
+            if (x1 >= 0 && x1 < 8 && y1 >= 0 && y1 < 8) {
+              int idx1 = 8 * x + y;
+              int idx2 = 8 * x1 + y1;
+              score += score(query[idx1], db[idx2]);
+            }
+          }
+        }
+        best = Math.max(best, score);
+      }
+    }
+    return best / 64d;
+  }
+
+  protected static double score(float f1, float f2) {
+    float fmin = Math.min(f1, f2);
+    float fmax = Math.max(f1, f2);
+    Color c1 = get(fmin);
+    Color c2 = get(fmax);
+    if (c1 == c2) {
+      return 1d;
+    }
+    switch (c1) {
+      case Black:
+        if (c2 == Color.Grey) {
+          return 0.25;
+        }
+        break;
+      case Blue:
+        if (c2 == Color.Navy || c2 == Color.Violet) {
+          return 0.5;
+        }
+        if (c2 == Color.Cyan) {
+          return 0.25;
+        }
+        break;
+      case Brown:
+        if (c2 == Color.Grey) {
+          return 0.5;
+        }
+        break;
+      case Cyan:
+        if (c2 == Color.White) {
+          return 0.25;
+        }
+        break;
+      case Green:
+        if (c2 == Color.Teal) {
+          return 0.5;
+        }
+        break;
+      case Grey:
+        if (c2 == Color.White || c2 == Color.Black) {
+          return 0.125;
+        }
+        break;
+      case Magenta:
+        if (c2 == Color.Violet || c2 == Color.Pink) {
+          return 0.5;
+        }
+        break;
+      case Orange:
+        if (c2 == Color.Red || c2 == Color.Yellow) {
+          return 0.5;
+        }
+        break;
+      case Pink:
+        if (c2 == Color.Red) {
+          return 0.5;
+        }
+        break;
+      default:
+        return 0;
+    }
+    return 0;
+  }
+
+  @Override
+  public void init(PersistencyWriterSupplier supply, int batchSize) {
+    super.init(supply, batchSize);
+    this.phandler.setFieldNames(GENERIC_ID_COLUMN_QUALIFIER, "hist", "raster");
   }
 
   Pair<float[], float[]> computeRaster(SegmentContainer shot) {
@@ -182,94 +262,6 @@ public class AverageColorRasterSuperpixelMeanShift extends AbstractFeatureModule
     this.phandler.persist(tuple);
   }
 
-  protected static double register(float[] query, float[] db) {
-    double best = 0;
-    if (query.length < 64 || db.length < 64) {
-      return 0;
-    }
-    for (int xoff = -4; xoff <= 4; ++xoff) {
-      for (int yoff = -4; yoff <= 4; ++yoff) {
-        double score = 0;
-        for (int x = 0; x < 8; ++x) {
-          for (int y = 0; y < 8; ++y) {
-            int x1 = x + xoff;
-            int y1 = y + yoff;
-            if (x1 >= 0 && x1 < 8 && y1 >= 0 && y1 < 8) {
-              int idx1 = 8 * x + y;
-              int idx2 = 8 * x1 + y1;
-              score += score(query[idx1], db[idx2]);
-            }
-          }
-        }
-        best = Math.max(best, score);
-      }
-    }
-    return best / 64d;
-  }
-
-  protected static double score(float f1, float f2) {
-    float fmin = Math.min(f1, f2);
-    float fmax = Math.max(f1, f2);
-    Color c1 = get(fmin);
-    Color c2 = get(fmax);
-    if (c1 == c2) {
-      return 1d;
-    }
-    switch (c1) {
-    case Black:
-      if (c2 == Color.Grey) {
-        return 0.25;
-      }
-      break;
-    case Blue:
-      if (c2 == Color.Navy || c2 == Color.Violet) {
-        return 0.5;
-      }
-      if (c2 == Color.Cyan) {
-        return 0.25;
-      }
-      break;
-    case Brown:
-      if (c2 == Color.Grey) {
-        return 0.5;
-      }
-      break;
-    case Cyan:
-      if (c2 == Color.White) {
-        return 0.25;
-      }
-      break;
-    case Green:
-      if (c2 == Color.Teal) {
-        return 0.5;
-      }
-      break;
-    case Grey:
-      if (c2 == Color.White || c2 == Color.Black) {
-        return 0.125;
-      }
-      break;
-    case Magenta:
-      if (c2 == Color.Violet || c2 == Color.Pink) {
-        return 0.5;
-      }
-      break;
-    case Orange:
-      if (c2 == Color.Red || c2 == Color.Yellow) {
-        return 0.5;
-      }
-      break;
-    case Pink:
-      if (c2 == Color.Red) {
-        return 0.5;
-      }
-      break;
-    default:
-      return 0;
-    }
-    return 0;
-  }
-
   private List<ScoreElement> getSimilar(float[] raster, float[] hist, ReadableQueryConfig rqc) {
     final int limit = rqc.getResultsPerModule();
     final QueryConfig qc = new QueryConfig(rqc).setDistanceIfEmpty(Distance.chisquared);
@@ -300,7 +292,8 @@ public class AverageColorRasterSuperpixelMeanShift extends AbstractFeatureModule
 
   @Override
   public List<ScoreElement> getSimilar(String segmentId, ReadableQueryConfig qc) {
-    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows(GENERIC_ID_COLUMN_QUALIFIER,  new StringTypeProvider(segmentId));
+    List<Map<String, PrimitiveTypeProvider>> rows = this.selector.getRows(
+        GENERIC_ID_COLUMN_QUALIFIER, new StringTypeProvider(segmentId));
 
     if (rows.isEmpty()) {
       return new ArrayList<>(1);
@@ -312,30 +305,13 @@ public class AverageColorRasterSuperpixelMeanShift extends AbstractFeatureModule
 
   @Override
   public void initalizePersistentLayer(Supplier<EntityCreator> supply) {
-    supply.get().createFeatureEntity(this.tableName, true, new AttributeDefinition("hist", AttributeType.VECTOR, 15), new AttributeDefinition("raster", AttributeType.VECTOR, 64));
+    supply.get().createFeatureEntity(this.tableName, true,
+        new AttributeDefinition("hist", AttributeType.VECTOR, 15),
+        new AttributeDefinition("raster", AttributeType.VECTOR, 64));
   }
 
   private BufferedImage applySuperpixel(SegmentContainer segmentContainer) {
-
-    BufferedImage image = segmentContainer.getAvgImg().getBufferedImage();
-    BufferedImage image2 = segmentContainer.getAvgImg().getBufferedImage();
-    image = ConvertBufferedImage.stripAlphaChannel(image);
-    ImageType<Planar<GrayF32>> imageType = ImageType.pl(3, GrayF32.class);
-    ImageSuperpixels alg = FactoryImageSegmentation.meanShift(null, imageType);
-    ImageBase color = imageType.createImage(image.getWidth(), image.getHeight());
-    ConvertBufferedImage.convertFrom(image, color, true);
-    BufferedImage superpixel = Superpixel.performSegmentation(alg, color);
-
-    for (int x = 0; x < superpixel.getWidth(); x++){
-      for (int y = 0; y < superpixel.getHeight(); y++) {
-        java.awt.Color c = new java.awt.Color(image2.getRGB(x,y), true);
-        if (c.getAlpha() == 1){
-          java.awt.Color cS = new java.awt.Color(superpixel.getRGB(x,y), true);
-          image2.setRGB(x,y, cS.getRGB());
-        }
-      }
-    }
-    return image2;
+    return Superpixel.applySuperpixelSC(segmentContainer, Superpixel.IMG_AVG, Superpixel.ALG_MS);
   }
 
 }

@@ -4,24 +4,39 @@ import boofcv.abst.segmentation.ImageSuperpixels;
 import boofcv.alg.filter.blur.GBlurImageOps;
 import boofcv.alg.segmentation.ComputeRegionMeanColor;
 import boofcv.alg.segmentation.ImageSegmentationOps;
+import boofcv.factory.segmentation.ConfigFh04;
+import boofcv.factory.segmentation.ConfigSlic;
+import boofcv.factory.segmentation.FactoryImageSegmentation;
 import boofcv.factory.segmentation.FactorySegmentationAlg;
-import boofcv.gui.ListDisplayPanel;
 import boofcv.gui.feature.VisualizeRegions;
-import boofcv.gui.image.ShowImages;
 import boofcv.io.image.ConvertBufferedImage;
 import boofcv.struct.feature.ColorQueue_F32;
+import boofcv.struct.image.GrayF32;
 import boofcv.struct.image.GrayS32;
 import boofcv.struct.image.ImageBase;
 import boofcv.struct.image.ImageType;
+import boofcv.struct.image.Planar;
+import java.awt.AlphaComposite;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import org.ddogleg.struct.FastQueue;
 import org.ddogleg.struct.GrowQueue_I32;
+import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 
 public class Superpixel {
 
+  public static final int ALG_FH04 = 1;
+  public static final int ALG_MS = 2;
+  public static final int ALG_SLIC = 3;
+  public static final int ALG_WATERSHED = 4;
+
+  public static final int IMG_AVG = 1;
+  public static final int IMG_MED = 2;
+  public static final int IMG_REP = 3;
+
   /**
-   * Code source: https://boofcv.org/index.php?title=Example_Superpixels
-   * Segments and visualizes the image
+   * Code source: https://boofcv.org/index.php?title=Example_Superpixels Segments and visualizes the
+   * image
    */
   public static <T extends ImageBase<T>>
   BufferedImage performSegmentation(ImageSuperpixels<T> alg, T color) {
@@ -42,9 +57,9 @@ public class Superpixel {
 
   /**
    * Code source: https://boofcv.org/index.php?title=Example_Superpixels
-   *
+   * <p>
    * Don't need visualization, just computation of Buffered Image!
-   *
+   * <p>
    * Visualizes results three ways. 1) Colorized segmented image where each region is given a random
    * color. 2) Each pixel is assigned the mean color through out the region. 3) Black pixels
    * represent the border between regions.
@@ -85,6 +100,100 @@ public class Superpixel {
     gui.addImage(outSegments, "Regions");
     ShowImages.showWindow(gui, "Superpixels", true);*/
     return outColor;
+  }
+
+  public static BufferedImage applySuperpixelBI(BufferedImage image, int algID) {
+    BufferedImage mask = image;
+    image = ConvertBufferedImage.stripAlphaChannel(image);
+    ImageType<Planar<GrayF32>> imageType = ImageType.pl(3, GrayF32.class);
+
+    ImageSuperpixels alg;
+    switch (algID) {
+      case 1:
+        alg = FactoryImageSegmentation.fh04(new ConfigFh04(100, 30), imageType);
+        break;
+      case 2:
+        alg = FactoryImageSegmentation.meanShift(null, imageType);
+        break;
+      case 3:
+        alg = FactoryImageSegmentation.slic(new ConfigSlic(400), imageType);
+        break;
+      case 4:
+        alg = FactoryImageSegmentation.watershed(null, imageType);
+        break;
+      default:
+        throw new IllegalStateException("Unexpected value: " + algID);
+    }
+    ImageBase color = imageType.createImage(image.getWidth(), image.getHeight());
+    ConvertBufferedImage.convertFrom(image, color, true);
+    BufferedImage superpixel = Superpixel.performSegmentation(alg, color);
+
+    return Superpixel.applyTransparency(superpixel, mask);
+  }
+
+  public static BufferedImage applySuperpixelSC(SegmentContainer segmentContainer, int imgID,
+      int algID) {
+    BufferedImage image, mask;
+    switch (imgID) {
+      case 1:
+        image = segmentContainer.getAvgImg().getBufferedImage();
+        mask = segmentContainer.getAvgImg().getBufferedImage();
+        break;
+      case 2:
+        image = segmentContainer.getMedianImg().getBufferedImage();
+        mask = segmentContainer.getMedianImg().getBufferedImage();
+        break;
+      case 3:
+        image = segmentContainer.getMostRepresentativeFrame().getImage().getBufferedImage();
+        mask = segmentContainer.getMostRepresentativeFrame().getImage().getBufferedImage();
+        break;
+      default:
+        throw new IllegalStateException("Unexpected value: " + imgID);
+    }
+    return applySuperpixel(algID, image, mask);
+  }
+
+  public static BufferedImage applySuperpixel(int algID, BufferedImage image, BufferedImage mask) {
+    image = ConvertBufferedImage.stripAlphaChannel(image);
+    ImageType<Planar<GrayF32>> imageType = ImageType.pl(3, GrayF32.class);
+
+    ImageSuperpixels alg;
+    switch (algID) {
+      case 1:
+        alg = FactoryImageSegmentation.fh04(new ConfigFh04(100, 30), imageType);
+        break;
+      case 2:
+        alg = FactoryImageSegmentation.meanShift(null, imageType);
+        break;
+      case 3:
+        alg = FactoryImageSegmentation.slic(new ConfigSlic(400), imageType);
+        break;
+      case 4:
+        alg = FactoryImageSegmentation.watershed(null, imageType);
+        break;
+      default:
+        throw new IllegalStateException("Unexpected value: " + algID);
+    }
+    ImageBase color = imageType.createImage(image.getWidth(), image.getHeight());
+    ConvertBufferedImage.convertFrom(image, color, true);
+    BufferedImage superpixel = Superpixel.performSegmentation(alg, color);
+
+    return Superpixel.applyTransparency(superpixel, mask);
+  }
+
+
+  public static BufferedImage applyTransparency(BufferedImage image, BufferedImage mask) {
+    BufferedImage combined = new BufferedImage(image.getWidth(), image.getHeight(),
+        BufferedImage.TYPE_INT_ARGB);
+    Graphics2D g = combined.createGraphics();
+    g.setComposite(AlphaComposite.Src);
+    g.drawImage(image, 0, 0, null);
+    g.setComposite(AlphaComposite.DstIn);
+    g.drawImage(mask, 0, 0, null);
+
+    g.dispose();
+
+    return combined;
   }
 
 }

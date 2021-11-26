@@ -1,49 +1,10 @@
 package org.vitrivr.cineast.core.features;
 
-import boofcv.abst.segmentation.ImageSuperpixels;
-import boofcv.alg.filter.binary.GThresholdImageOps;
-import boofcv.alg.misc.ImageStatistics;
-import boofcv.factory.segmentation.ConfigFh04;
-import boofcv.factory.segmentation.FactoryImageSegmentation;
-import boofcv.gui.ListDisplayPanel;
-import boofcv.gui.binary.VisualizeBinaryData;
-import boofcv.gui.image.ShowImages;
-import boofcv.io.image.ConvertBufferedImage;
-import boofcv.struct.image.GrayF32;
-import boofcv.struct.image.GrayU8;
-import boofcv.struct.image.ImageBase;
-import boofcv.struct.image.ImageInterleaved;
-import boofcv.struct.image.ImageMultiBand;
-import boofcv.struct.image.ImageType;
-import boofcv.struct.image.InterleavedF32;
-import boofcv.struct.image.InterleavedInteger;
-import boofcv.struct.image.InterleavedU8;
-import boofcv.struct.image.Planar;
-import java.awt.Color;
-import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.awt.image.ColorModel;
-import java.awt.image.DataBuffer;
-import java.awt.image.DataBufferByte;
-import java.awt.image.DataBufferInt;
-import java.awt.image.IndexColorModel;
-import java.awt.image.WritableRaster;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
-import java.util.ArrayList;
 import java.util.List;
-import javax.imageio.ImageIO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.graalvm.compiler.replacements.nodes.BitCountNode;
-import org.opencv.core.Core;
-import org.opencv.core.CvType;
-import org.opencv.core.Mat;
-import org.opencv.core.MatOfByte;
-import org.opencv.imgcodecs.Imgcodecs;
-import org.opencv.imgproc.Imgproc;
 import org.vitrivr.cineast.core.color.ColorConverter;
 import org.vitrivr.cineast.core.color.LabContainer;
 import org.vitrivr.cineast.core.color.ReadableRGBContainer;
@@ -56,7 +17,6 @@ import org.vitrivr.cineast.core.data.raw.images.MultiImage;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.features.abstracts.AbstractFeatureModule;
-import sun.jvm.hotspot.utilities.BitMap;
 
 public class MedianColorSuperpixelWatershed extends AbstractFeatureModule {
 
@@ -125,27 +85,7 @@ public class MedianColorSuperpixelWatershed extends AbstractFeatureModule {
   }
 
   private BufferedImage applySuperpixel(SegmentContainer segmentContainer) throws IOException {
-
-    BufferedImage image = segmentContainer.getMedianImg().getBufferedImage();
-    image = ConvertBufferedImage.stripAlphaChannel(image);
-    BufferedImage image2 = segmentContainer.getMedianImg().getBufferedImage();
-    ImageType<Planar<GrayF32>> imageType = ImageType.pl(3, GrayF32.class);
-    ImageSuperpixels alg = FactoryImageSegmentation.watershed(null, imageType);
-    ImageBase color = imageType.createImage(image.getWidth(), image.getHeight());
-    ConvertBufferedImage.convertFrom(image, color, true);
-    BufferedImage superpixel = Superpixel.performSegmentation(alg, color);
-
-
-    for (int x = 0; x < superpixel.getWidth(); x++){
-      for (int y = 0; y < superpixel.getHeight(); y++) {
-        java.awt.Color c = new Color(image2.getRGB(x,y), true);
-        if (c.getAlpha() == 1){
-          Color cS = new Color(superpixel.getRGB(x,y), true);
-          image2.setRGB(x,y, cS.getRGB());
-        }
-      }
-    }
-    return image2;
+    return Superpixel.applySuperpixelSC(segmentContainer, Superpixel.IMG_MED, Superpixel.ALG_MS);
   }
 
 }
