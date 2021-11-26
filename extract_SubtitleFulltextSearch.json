@@ -1,0 +1,27 @@
+{
+  "input":{
+    "path": "pathSource",
+    "depth": 3,
+    "skip": 0,
+    "id": {
+      "name": "FileNameObjectIdGenerator",
+      "properties": {}
+    }
+  },
+  "extractors":[
+    {"name": "SubtitleFulltextSearch"}
+  ],
+  "exporters":[
+    {
+      "name": "ShotThumbnailsExporter",
+      "properties": {
+        "destination": "pathThumbnails/"
+      }
+    }
+  ],
+  "database":{
+    "selector": "JSON",
+    "writer": "JSON",
+    "host": "pathOutput/"
+  }
+}
