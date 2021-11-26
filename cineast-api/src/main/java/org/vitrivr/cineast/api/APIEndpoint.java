@@ -464,8 +464,7 @@ public class APIEndpoint {
                 Config.sharedConfig().getDatabase().getSelectorSupplier().get()));
       }
 
-      service.get("/objects/{id}", new ResolvedContentRoute(fsor
-      ));
+      service.get("/objects/{id}", new ResolvedContentRoute(fsor));
     }
   }
 
