@@ -8,8 +8,15 @@ import boofcv.struct.image.GrayF32;
 import boofcv.struct.image.ImageBase;
 import boofcv.struct.image.ImageType;
 import boofcv.struct.image.Planar;
+import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
+import javax.imageio.ImageIO;
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.color.ColorConverter;
@@ -68,7 +75,7 @@ public class MedianColorSuperpixelSlic extends AbstractFeatureModule {
   }
 
   @Override
-  public void processSegment(SegmentContainer shot) {
+  public void processSegment(SegmentContainer shot) throws IOException {
     if (shot.getMostRepresentativeFrame() == VideoFrame.EMPTY_VIDEO_FRAME) {
       return;
     }
@@ -82,7 +89,8 @@ public class MedianColorSuperpixelSlic extends AbstractFeatureModule {
   }
 
   @Override
-  public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
+  public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc)
+      throws IOException {
     BufferedImage superpixel = applySuperpixel(sc);
 
     MultiImage multiImage = factory.newMultiImage(superpixel);
@@ -90,16 +98,38 @@ public class MedianColorSuperpixelSlic extends AbstractFeatureModule {
     return getSimilar(ReadableFloatVector.toArray(query), qc);
   }
 
-  private BufferedImage applySuperpixel(SegmentContainer segmentContainer) {
+  private BufferedImage applySuperpixel(SegmentContainer segmentContainer) throws IOException {
 
     BufferedImage image = segmentContainer.getMedianImg().getBufferedImage();
+    BufferedImage image2 = segmentContainer.getMedianImg().getBufferedImage();
     image = ConvertBufferedImage.stripAlphaChannel(image);
     ImageType<Planar<GrayF32>> imageType = ImageType.pl(3, GrayF32.class);
     ImageSuperpixels alg = FactoryImageSegmentation.slic(new ConfigSlic(400), imageType);
     ImageBase color = imageType.createImage(image.getWidth(), image.getHeight());
     ConvertBufferedImage.convertFrom(image, color, true);
     BufferedImage superpixel = Superpixel.performSegmentation(alg, color);
-    return superpixel;
+
+    for (int x = 0; x < superpixel.getWidth(); x++){
+      for (int y = 0; y < superpixel.getHeight(); y++) {
+        java.awt.Color c = new Color(image2.getRGB(x,y), true);
+        if (c.getAlpha() == 1){
+          Color cS = new Color(superpixel.getRGB(x,y), true);
+          image2.setRGB(x,y, cS.getRGB());
+        }
+      }
+    }
+
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    ImageIO.write(image2, "png", baos);
+    byte[] bytes = baos.toByteArray();
+    System.out.println(encodeFileToBase64Binary(bytes));
+    return image2;
+  }
+
+  private static String encodeFileToBase64Binary(byte[] fileContent) throws IOException {
+    String encodedString =
+        "data:image/png;base64," + Base64.getEncoder().encodeToString(fileContent);
+    return encodedString;
   }
 
 }

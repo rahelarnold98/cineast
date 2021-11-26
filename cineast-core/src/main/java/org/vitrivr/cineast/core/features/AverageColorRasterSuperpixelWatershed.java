@@ -317,13 +317,24 @@ public class AverageColorRasterSuperpixelWatershed extends AbstractFeatureModule
   private BufferedImage applySuperpixel(SegmentContainer segmentContainer) {
 
     BufferedImage image = segmentContainer.getAvgImg().getBufferedImage();
+    BufferedImage image2 = segmentContainer.getAvgImg().getBufferedImage();
     image = ConvertBufferedImage.stripAlphaChannel(image);
     ImageType<Planar<GrayF32>> imageType = ImageType.pl(3, GrayF32.class);
     ImageSuperpixels alg = FactoryImageSegmentation.watershed(null, imageType);
     ImageBase color = imageType.createImage(image.getWidth(), image.getHeight());
     ConvertBufferedImage.convertFrom(image, color, true);
     BufferedImage superpixel = Superpixel.performSegmentation(alg, color);
-    return superpixel;
+
+    for (int x = 0; x < superpixel.getWidth(); x++){
+      for (int y = 0; y < superpixel.getHeight(); y++) {
+        java.awt.Color c = new java.awt.Color(image2.getRGB(x,y), true);
+        if (c.getAlpha() == 1){
+          java.awt.Color cS = new java.awt.Color(superpixel.getRGB(x,y), true);
+          image2.setRGB(x,y, cS.getRGB());
+        }
+      }
+    }
+    return image2;
   }
 
 }

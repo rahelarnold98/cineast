@@ -8,6 +8,7 @@ import boofcv.struct.image.GrayF32;
 import boofcv.struct.image.ImageBase;
 import boofcv.struct.image.ImageType;
 import boofcv.struct.image.Planar;
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -114,13 +115,24 @@ public class AverageColorGrid8SuperpixelFh04 extends AbstractFeatureModule {
   private BufferedImage applySuperpixel(SegmentContainer segmentContainer) {
 
     BufferedImage image = segmentContainer.getAvgImg().getBufferedImage();
+    BufferedImage image2 = segmentContainer.getAvgImg().getBufferedImage();
     image = ConvertBufferedImage.stripAlphaChannel(image);
     ImageType<Planar<GrayF32>> imageType = ImageType.pl(3, GrayF32.class);
     ImageSuperpixels alg = FactoryImageSegmentation.fh04(new ConfigFh04(100, 30), imageType);
     ImageBase color = imageType.createImage(image.getWidth(), image.getHeight());
     ConvertBufferedImage.convertFrom(image, color, true);
     BufferedImage superpixel = Superpixel.performSegmentation(alg, color);
-    return superpixel;
+
+    for (int x = 0; x < superpixel.getWidth(); x++){
+      for (int y = 0; y < superpixel.getHeight(); y++) {
+        java.awt.Color c = new Color(image2.getRGB(x,y), true);
+        if (c.getAlpha() == 1){
+          Color cS = new Color(superpixel.getRGB(x,y), true);
+          image2.setRGB(x,y, cS.getRGB());
+        }
+      }
+    }
+    return image2;
   }
 
 
