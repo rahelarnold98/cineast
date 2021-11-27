@@ -75,8 +75,7 @@ public class MedianColorSuperpixelSlic extends AbstractFeatureModule {
   }
 
   @Override
-  public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc)
-      throws IOException {
+  public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
     BufferedImage superpixel = applySuperpixel(sc);
 
     MultiImage multiImage = factory.newMultiImage(superpixel);
@@ -84,7 +83,7 @@ public class MedianColorSuperpixelSlic extends AbstractFeatureModule {
     return getSimilar(ReadableFloatVector.toArray(query), qc);
   }
 
-  private BufferedImage applySuperpixel(SegmentContainer segmentContainer) throws IOException {
+  private BufferedImage applySuperpixel(SegmentContainer segmentContainer) {
     return Superpixel.applySuperpixelSC(segmentContainer, Superpixel.IMG_MED, Superpixel.ALG_SLIC);
   }
 
