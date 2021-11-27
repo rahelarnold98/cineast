@@ -102,7 +102,7 @@ public class ExtractionCommand implements Runnable {
       } catch (ClassCastException e) {
         System.err.println("Could not register completion listener for extraction.");
       } finally {
-        ArrayList<String> col = new ArrayList<>();
+        /*ArrayList<String> col = new ArrayList<>();
         col.addAll(ShotThumbnailsExporter.colors);
         ObjectMapper mapper = new ObjectMapper();
         try {
@@ -114,7 +114,7 @@ public class ExtractionCommand implements Runnable {
           mapper.writeValue(new File("colors-" + conf + "-" + formattedDate +  ".json"), col);
         } catch (IOException e) {
           e.printStackTrace();
-        }
+        }*/
         if (postExtractionIIIFCleanup != null) {
           postExtractionIIIFCleanup.run();
         }

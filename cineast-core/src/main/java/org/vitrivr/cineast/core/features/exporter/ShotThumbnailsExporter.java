@@ -88,7 +88,7 @@ public class ShotThumbnailsExporter implements Extractor {
 				LOGGER.warn("Could not find appropriate writer for thumbnail \"{}\", attempting conversion.", shot.getId());
 				BufferedImage convertedThumb = new BufferedImage(thumb.getWidth(), thumb.getHeight(), BufferedImage.TYPE_INT_RGB);
 				convertedThumb.getGraphics().drawImage(thumb, 0, 0, null);
-				getColors(convertedThumb);
+				//getColors(convertedThumb);
 				writeSuccess = ImageIO.write(convertedThumb, format, img);
 				if (!writeSuccess) {
 					LOGGER.error("Could not find appropriate writer for thumbnail \"{}\", even after conversion!", shot.getId());
