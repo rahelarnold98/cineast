@@ -9,7 +9,8 @@
     }
   },
   "extractors":[
-    {"name": "SubtitleFulltextSearch"}
+    {"name": "SubtitleFulltextSearch"},
+    {"name": "OCRSearch"}
   ],
   "exporters":[
     {
