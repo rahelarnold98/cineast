@@ -8,7 +8,9 @@ import boofcv.factory.segmentation.ConfigFh04;
 import boofcv.factory.segmentation.ConfigSlic;
 import boofcv.factory.segmentation.FactoryImageSegmentation;
 import boofcv.factory.segmentation.FactorySegmentationAlg;
+import boofcv.gui.ListDisplayPanel;
 import boofcv.gui.feature.VisualizeRegions;
+import boofcv.gui.image.ShowImages;
 import boofcv.io.image.ConvertBufferedImage;
 import boofcv.struct.feature.ColorQueue_F32;
 import boofcv.struct.image.GrayF32;
@@ -21,6 +23,9 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import org.ddogleg.struct.FastQueue;
 import org.ddogleg.struct.GrowQueue_I32;
+import org.vitrivr.cineast.core.color.ColorConverter;
+import org.vitrivr.cineast.core.color.LabContainer;
+import org.vitrivr.cineast.core.color.RGBContainer;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 
 public class Superpixel {
@@ -79,6 +84,39 @@ public class Superpixel {
     ImageSegmentationOps.countRegionPixels(pixelToRegion, numSegments, regionMemberCount.data);
     colorize.process(color, pixelToRegion, regionMemberCount, segmentColor);
 
+    ColorSuperpixel colorSuperpixel = new ColorSuperpixel();
+    for (int i = 0; i < segmentColor.size; i++) {
+      double minDeltaE = Double.MAX_VALUE;
+      RGBContainer minColor = null;
+      /*Color c = new Color(segmentColor.data[i][0], segmentColor.data[i][1],
+          segmentColor.data[i][2]);*/
+      /*RGBContainer c = new RGBContainer(0,0,0);
+
+      c.setElementF(0, segmentColor.data[i][0]);
+      c.setElementF(1, segmentColor.data[i][1]);
+      c.setElementF(2, segmentColor.data[i][2]);*/
+
+      /*RGBContainer c = new RGBContainer(segmentColor.data[i][0], segmentColor.data[i][1],
+          segmentColor.data[i][2]);*/
+      LabContainer c1 = ColorConverter.RGBtoLab((int) segmentColor.data[i][0],
+          (int) segmentColor.data[i][1], (int) segmentColor.data[i][2]);
+      for (int j = 0; j < colorSuperpixel.colors.size(); j++) {
+        System.out.println(colorSuperpixel.colors.get(j).getR());
+        LabContainer c2 = ColorConverter.RGBtoLab((int) colorSuperpixel.colors.get(j).getR(),
+            (int) colorSuperpixel.colors.get(j).getG(), (int) colorSuperpixel.colors.get(j).getB());
+        double deltaE = calculateDeltaE(c1, c2);
+        if (deltaE < minDeltaE) {
+          minDeltaE = deltaE;
+          minColor = colorSuperpixel.colors.get(j);
+        }
+
+      }
+      assert minColor != null;
+      segmentColor.data[i][0] = minColor.getR();
+      segmentColor.data[i][1] = minColor.getG();
+      segmentColor.data[i][2] = minColor.getB();
+    }
+
     // Draw each region using their average color
     BufferedImage outColor = VisualizeRegions.regionsColor(pixelToRegion, segmentColor, null);
     // Draw each region by assigning it a random color
@@ -100,6 +138,17 @@ public class Superpixel {
     gui.addImage(outSegments, "Regions");
     ShowImages.showWindow(gui, "Superpixels", true);*/
     return outColor;
+  }
+
+
+  public static double calculateDeltaE(LabContainer l1, LabContainer l2) {
+
+    float dL = l1.getL() - l2.getL();
+    float dA = l1.getA() - l2.getA();
+    float dB = l1.getB() - l2.getB();
+
+    // calculate deltaE
+    return Math.sqrt(Math.pow(dL, 2) + Math.pow(dA, 2) + Math.pow(dB, 2));
   }
 
   public static BufferedImage applySuperpixelBI(BufferedImage image, int algID) {
@@ -192,6 +241,11 @@ public class Superpixel {
     g.drawImage(mask, 0, 0, null);
 
     g.dispose();
+    /*
+    ListDisplayPanel gui = new ListDisplayPanel();
+    gui.addImage(combined, "Color of Segments");
+    ShowImages.showWindow(gui, "SuperpixelsDEF", true);
+     */
 
     return combined;
   }

@@ -7,39 +7,39 @@ public class RGBContainer extends ReadableRGBContainer implements FloatVector{
 	public RGBContainer(ReadableRGBContainer rgb){
 		super(rgb.r, rgb.g, rgb.b);
 	}
-	
+
 	RGBContainer() {
 		super(0, 0, 0);
 	}
-	
+
 	public RGBContainer(int r, int g, int b){
 		super(r, g, b);
 	}
-	
+
 	public RGBContainer(int r, int g, int b, int a){
 		super(r, g, b, a);
 	}
-	
+
 	public RGBContainer(float r, float g, float b){
 		super(r, g, b);
 	}
-	
+
 	public RGBContainer(float r, float g, float b, float a){
 		super(r, g, b, a);
 	}
-	
+
 	public RGBContainer(double r, double g, double b){
 		super(r, g, b);
 	}
-	
+
 	public RGBContainer(double r, double g, double b, double a){
 		super(r, g, b, a);
 	}
-	
+
 	public RGBContainer(int color){
 		super(color);
 	}
-	
+
 	@Override
 	public void setElement(int num, float val) {
 		switch(num){
@@ -48,10 +48,10 @@ public class RGBContainer extends ReadableRGBContainer implements FloatVector{
 		case 2:{b = Math.round(val * 255f); break;}
 		case 3:{a = Math.round(val * 255f); break;}
 		}
-		
+
 	}
 
-	
+
 
 	@Override
 	public int hashCode() {
@@ -98,5 +98,17 @@ public class RGBContainer extends ReadableRGBContainer implements FloatVector{
 	  this.a = getAlpha(intcolor);
 	  return this;
 	}
-	
+
+  public int getR() {
+    return this.r;
+  }
+
+  public int getG() {
+    return this.g;
+  }
+
+  public int getB() {
+    return this.b;
+  }
+
 }
