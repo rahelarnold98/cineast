@@ -8,9 +8,7 @@ import boofcv.factory.segmentation.ConfigFh04;
 import boofcv.factory.segmentation.ConfigSlic;
 import boofcv.factory.segmentation.FactoryImageSegmentation;
 import boofcv.factory.segmentation.FactorySegmentationAlg;
-import boofcv.gui.ListDisplayPanel;
 import boofcv.gui.feature.VisualizeRegions;
-import boofcv.gui.image.ShowImages;
 import boofcv.io.image.ConvertBufferedImage;
 import boofcv.struct.feature.ColorQueue_F32;
 import boofcv.struct.image.GrayF32;
@@ -88,22 +86,11 @@ public class Superpixel {
     for (int i = 0; i < segmentColor.size; i++) {
       double minDeltaE = Double.MAX_VALUE;
       RGBContainer minColor = null;
-      /*Color c = new Color(segmentColor.data[i][0], segmentColor.data[i][1],
-          segmentColor.data[i][2]);*/
-      /*RGBContainer c = new RGBContainer(0,0,0);
-
-      c.setElementF(0, segmentColor.data[i][0]);
-      c.setElementF(1, segmentColor.data[i][1]);
-      c.setElementF(2, segmentColor.data[i][2]);*/
-
-      /*RGBContainer c = new RGBContainer(segmentColor.data[i][0], segmentColor.data[i][1],
-          segmentColor.data[i][2]);*/
       LabContainer c1 = ColorConverter.RGBtoLab((int) segmentColor.data[i][0],
           (int) segmentColor.data[i][1], (int) segmentColor.data[i][2]);
       for (int j = 0; j < colorSuperpixel.colors.size(); j++) {
-        System.out.println(colorSuperpixel.colors.get(j).getR());
-        LabContainer c2 = ColorConverter.RGBtoLab((int) colorSuperpixel.colors.get(j).getR(),
-            (int) colorSuperpixel.colors.get(j).getG(), (int) colorSuperpixel.colors.get(j).getB());
+        LabContainer c2 = ColorConverter.RGBtoLab(colorSuperpixel.colors.get(j).getR(),
+            colorSuperpixel.colors.get(j).getG(), colorSuperpixel.colors.get(j).getB());
         double deltaE = calculateDeltaE(c1, c2);
         if (deltaE < minDeltaE) {
           minDeltaE = deltaE;
