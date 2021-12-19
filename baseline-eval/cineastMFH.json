@@ -1,0 +1,116 @@
+{
+  "database": {
+    "host": "localhost",
+    "selector": "COTTONTAIL",
+    "writer": "COTTONTAIL",
+    "port": 1865,
+    "plaintext": true
+  },
+  "benchmark": {
+    "mode": "OFF",
+    "path": "benchmarks"
+  },
+  "retriever": {
+    "threadPoolSize": 2,
+    "maxResults": 10000,
+    "resultsPerModule": 5000,
+    "features": {
+      "semantic" : [
+        {"feature": "ConceptMasksAde20k", "weight" : 1.0}
+      ],
+      "globalcolor": [
+        {"feature": "MedianFuzzyHist",   "weight": 1.3 }
+      ],
+      "edge": [
+        {"feature": "EHD", "weight": 0.7},
+        {"feature": "DominantEdgeGrid16", "weight": 1.4},
+        {"feature": "DominantEdgeGrid8", "weight": 1.4}
+      ],
+      "motion": [
+        {"feature": "SubDivMotionHistogram3", "weight": 0.5},
+        {"feature": "SubDivMotionHistogram5", "weight": 0.5},
+        {"feature": "SubDivMotionHistogramBackground3", "weight": 0.5},
+        {"feature": "SubDivMotionHistogramBackground5", "weight": 0.5}
+      ],
+      "localfeatures": [
+        {"feature": "HOGMirflickr25K512", "weight": 1.0}
+      ],
+      "localfeatures_fast": [
+        {"feature": "HOGMirflickr25K256", "weight": 1.0}
+      ],
+      "audiofingerprint": [
+        {"feature": "HPCP12Shingle", "weight": 1.0}
+      ],
+      "visualtextcoembedding": [
+        {"feature": "VisualTextCoEmbedding", "weight": 1.0}
+      ],
+      "boolean": [
+        {
+          "feature": "RangeBooleanRetriever", "weight": 1.0,
+          "properties": {
+            "entity": "table_name",
+            "attribute": "text,option,range"
+          }
+        }
+      ]
+    }
+  },
+
+  "decoders": {
+    "VIDEO": {
+      "decoder": "FFMpegVideoDecoder",
+      "properties": {
+        "maxFrameWidth": 640,
+        "maxFrameHeight": 480
+      }
+    },
+    "IMAGE": {
+      "decoder": "DefaultImageDecoder",
+      "properties": {
+        "bounds": 1024
+      }
+    },
+    "AUDIO": {
+      "decoder": "FFMpegAudioDecoder",
+      "properties": {
+        "samplerate": 44100,
+        "channels": 2
+      }
+    }
+  },
+
+  "extractor": {
+    "threadPoolSize": 4,
+    "outputLocation": "out"
+  },
+
+  "api": {
+    "enableCLI": true,
+    "enableWebsocket": true,
+    "enableWebsocketSecure": false,
+    "enableRest": true,
+    "enableRestLiveDoc": true,
+    "enableRestSecure": false,
+    "enableLegacy": false,
+    "httpPort": 4567,
+    "httpsPort": 4568,
+    "grpcPort": 4570,
+    "legacyPort": 12345,
+    "threadPoolSize": 12,
+    "serveContent": true,
+    "serveUI": true,
+    "uiLocation": "../vitrivr-ng/dist",
+    "thumbnailLocation": "./thumbnails",
+    "objectLocation": "./v3c1-mini",
+    "objectsFilesAreIDed": false
+  },
+  "monitoring": {
+    "enablePrometheus": true,
+    "prometheusPort": 4569
+  },
+  "jsonQuery": {
+    "createFile": true,
+    "path": "./json-queries-mfh"
+  }
+
+}
