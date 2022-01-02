@@ -19,7 +19,7 @@
         {"feature": "ConceptMasksAde20k", "weight" : 1.0}
       ],
       "globalcolor": [
-        {"feature": "AverageColor",  "weight": 2.3},
+        {"feature": "AverageColor",  "weight": 2.3}
       ],
       "edge": [
         {"feature": "EHD", "weight": 0.7},
